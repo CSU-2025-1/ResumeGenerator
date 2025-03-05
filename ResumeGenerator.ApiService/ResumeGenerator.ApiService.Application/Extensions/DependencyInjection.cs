@@ -1,5 +1,4 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
-using ResumeGenerator.ApiService.Application.DTO.Requests.Resumes;
 using ResumeGenerator.ApiService.Application.Handlers.Resumes;
 using ResumeGenerator.ApiService.Application.Services.Resumes;
 using ResumeGenerator.ApiService.Application.Validators.Dto;
