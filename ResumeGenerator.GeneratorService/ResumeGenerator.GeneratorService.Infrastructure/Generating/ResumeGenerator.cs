@@ -1,4 +1,5 @@
 ﻿using HtmlToPdfMaster;
+using Microsoft.Extensions.Options;
 using ResumeGenerator.GeneratorService.Core.Entities;
 using ResumeGenerator.GeneratorService.Core.Interfaces;
 
@@ -6,17 +7,17 @@ namespace ResumeGenerator.GeneratorService.Infrastructure.Generating;
 
 public class ResumeGenerator : IResumeGenerator
 {
-    private static readonly string TemplatePath = 
-        Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "Templates", "ResumeTemplate.html");
+    private readonly string _template;
     
-    private static readonly string Template;
-
-    static ResumeGenerator()
+    public ResumeGenerator(IOptions<ResumeTemplates> options)
     {
-        if (!File.Exists(TemplatePath))
-            throw new FileNotFoundException($"HTML template file not found on path:\n{TemplatePath}");
+        string templatePath = Path.Combine(
+            AppDomain.CurrentDomain.BaseDirectory, options.Value.TemplateFolderPath, options.Value.PdfTemplateName);
         
-        Template = File.ReadAllText(TemplatePath);
+        if (!File.Exists(templatePath))
+            throw new FileNotFoundException($"HTML template file not found on path:\n{templatePath}");
+        
+        _template = File.ReadAllText(templatePath);
     }
     
     public byte[] GeneratePdf(in Resume resume, in PdfParameters parameters) => HtmlConverter.FromHtmlString(
@@ -32,7 +33,7 @@ public class ResumeGenerator : IResumeGenerator
         parameters.Encoding
     );
 
-    public string GenerateHtml(in Resume resume) => string.Format(Template, [
+    public string GenerateHtml(in Resume resume) => string.Format(_template, [
         resume.FirstName, resume.MiddleName, resume.LastName,
         resume.DesiredPosition,
         resume.GitHubLink,
