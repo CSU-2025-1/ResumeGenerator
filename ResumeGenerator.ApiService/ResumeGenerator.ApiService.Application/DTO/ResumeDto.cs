@@ -1,11 +1,9 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿namespace ResumeGenerator.ApiService.Application.DTO;
 
-namespace ResumeGenerator.ApiService.Data.Entities;
-
-public sealed class Resume
+public record ResumeDto
 {
     public Guid Id { get; set; }
-    public Guid UserId { get; set; }
+    public Guid UserId { get; set; } //Костыль на время пока Аутха нет
     public string UserFirstName { get; set; }
     public string UserLastName { get; set; }
     public string UserPatronymic { get; set; }

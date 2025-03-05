@@ -1,9 +1,24 @@
+using ResumeGenerator.ApiService.Application.Extensions;
+using ResumeGenerator.ApiService.Application.Mapping;
 using ResumeGenerator.ApiService.Data.Extentions;
+using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddOpenApi();
 builder.Services.AddDataLayerServices(builder.Configuration);
+
+builder.Services.AddControllers();
+
+builder.Services.AddValidators();
+builder.Services.AddAutoMapper(typeof(AppMappingProfile));
+builder.Services.AddApplicationServices();
+builder.Services.AddHandlers();
+
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Console()
+    .MinimumLevel.Debug()
+    .CreateLogger();
 
 var app = builder.Build();
 
