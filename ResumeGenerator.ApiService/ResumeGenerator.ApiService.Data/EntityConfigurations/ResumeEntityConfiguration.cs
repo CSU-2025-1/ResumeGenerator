@@ -9,8 +9,9 @@ public sealed class ResumeEntityConfiguration: IEntityTypeConfiguration<Resume>
     public void Configure(EntityTypeBuilder<Resume> builder)
     {
         builder.ToTable("users");
-
+        
         builder.HasKey(u => u.Id);
-        builder.HasAlternateKey(u => u.PhoneNumber);
+        builder.Property(u => u.Id).HasColumnName("id");
+        builder.HasIndex(u => u.PhoneNumber).IsUnique();
     }
 }
