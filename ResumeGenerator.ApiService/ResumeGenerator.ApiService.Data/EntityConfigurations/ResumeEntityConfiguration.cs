@@ -4,13 +4,13 @@ using ResumeGenerator.ApiService.Data.Entities;
 
 namespace ResumeGenerator.ApiService.Data.EntityConfigurations;
 
-public class ResumeEntityConfiguration: IEntityTypeConfiguration<Resume>
+public sealed class ResumeEntityConfiguration: IEntityTypeConfiguration<Resume>
 {
     public void Configure(EntityTypeBuilder<Resume> builder)
     {
-        builder.ToTable("Users");
+        builder.ToTable("users");
 
-        builder.HasKey(u => u.ResumeId);
+        builder.HasKey(u => u.Id);
         builder.HasAlternateKey(u => u.PhoneNumber);
     }
 }
