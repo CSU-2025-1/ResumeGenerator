@@ -10,4 +10,9 @@
     <ItemGroup>
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.1"/>
     </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\ResumeGenerator.GeneratorService.Core\ResumeGenerator.GeneratorService.Core.csproj" />
+        <ProjectReference Include="..\ResumeGenerator.GeneratorService.Infrastructure\ResumeGenerator.GeneratorService.Infrastructure.csproj" />
+    </ItemGroup>
 </Project>
