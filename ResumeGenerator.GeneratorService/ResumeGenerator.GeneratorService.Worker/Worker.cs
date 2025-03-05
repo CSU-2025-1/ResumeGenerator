@@ -3,8 +3,17 @@ using ResumeGenerator.GeneratorService.Core.Interfaces;
 
 namespace ResumeGenerator.GeneratorService.Worker;
 
-public class Worker(ILogger<Worker> logger, IResumeGenerator resumeGenerator) : BackgroundService
+public class Worker : BackgroundService
 {
+    private readonly ILogger<Worker> _logger;
+    private readonly IResumeGenerator _resumeGenerator;
+    
+    public Worker(ILogger<Worker> logger, IResumeGenerator resumeGenerator)
+    {
+        _logger = logger;
+        _resumeGenerator = resumeGenerator;
+    }
+    
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         /*
@@ -17,14 +26,14 @@ public class Worker(ILogger<Worker> logger, IResumeGenerator resumeGenerator) : 
         
         var parameters = new PdfParameters(148, 210);
         
-        await File.WriteAllBytesAsync(path, resumeGenerator.GeneratePdf(resume, parameters), stoppingToken);
+        await File.WriteAllBytesAsync(path, _resumeGenerator.GeneratePdf(resume, parameters), stoppingToken);
         */
         
         while (!stoppingToken.IsCancellationRequested)
         {
-            if (logger.IsEnabled(LogLevel.Information))
+            if (_logger.IsEnabled(LogLevel.Information))
             {
-                logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
+                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
             }
 
             await Task.Delay(1000, stoppingToken);

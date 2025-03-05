@@ -32,7 +32,7 @@ public class ResumeGenerator : IResumeGenerator
         parameters.Encoding
     );
 
-    private static string GenerateHtml(in Resume resume) => string.Format(Template, [
+    public string GenerateHtml(in Resume resume) => string.Format(Template, [
         resume.FirstName, resume.MiddleName, resume.LastName,
         resume.DesiredPosition,
         resume.GitHubLink,
