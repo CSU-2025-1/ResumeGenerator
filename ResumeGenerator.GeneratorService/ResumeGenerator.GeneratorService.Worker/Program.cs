@@ -1,7 +1,16 @@
-using ResumeGenerator.GeneratorService.Worker;
+using ResumeGenerator.GeneratorService.Core.Interfaces;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+namespace ResumeGenerator.GeneratorService.Worker;
 
-var host = builder.Build();
-host.Run();
+public static class Program
+{
+    public static void Main(string[] args)
+    {
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+        builder.Services.AddHostedService<Worker>();
+        builder.Services.AddSingleton<IResumeGenerator, Infrastructure.Generating.ResumeGenerator>();
+
+        IHost host = builder.Build();
+        host.Run();
+    }
+}
