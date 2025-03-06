@@ -8,25 +8,26 @@ namespace ResumeGenerator.ApiService.Application.Handlers.Resumes;
 
 public sealed class CreateResumeHandler
 {
-    private readonly CreateResumeRequestValidator validator;
-    private readonly IResumeService resumeService;
-    private readonly ILogger<CreateResumeHandler> logger;
+    private readonly CreateResumeRequestValidator _validator;
+    private readonly IResumeService _resumeService;
+    private readonly ILogger<CreateResumeHandler> _logger;
 
-    public CreateResumeHandler(CreateResumeRequestValidator validator, IResumeService resumeService, ILogger<CreateResumeHandler> logger)
+    public CreateResumeHandler(CreateResumeRequestValidator validator, IResumeService resumeService,
+        ILogger<CreateResumeHandler> logger)
     {
-        this.resumeService = resumeService;
-        this.validator = validator;
-        this.logger = logger;
+        _resumeService = resumeService;
+        _validator = validator;
+        _logger = logger;
     }
-    
+
     public async Task Handle(CreateResumeRequest request, CancellationToken ct = default)
     {
-        var validationResult = await validator.ValidateAsync(request, ct);
+        var validationResult = await _validator.ValidateAsync(request, ct);
         BadRequestException.ThrowByValidationResult(validationResult);
 
-        var resume = await resumeService.CreateResumeAsync(request.Resume, ct);
-        
-        logger.LogInformation($"User with id {request.Resume.UserId} successfully " +
-                              $"created wish with id {resume.Id}.");
+        var resume = await _resumeService.CreateResumeAsync(request.Resume, ct);
+
+        _logger.LogInformation($"User with id {request.Resume.UserId} successfully " +
+                               $"created wish with id {resume.Id}.");
     }
 }

@@ -11,33 +11,33 @@ namespace ResumeGenerator.ApiService.Application.Handlers.Resumes;
 
 public sealed class GetAllResumesByUserIdHandler
 {
-    private readonly GetResumesByUserIdRequestValidator validator;
-    private readonly IResumeService resumeService;
-    private readonly IMapper mapper;
-    private readonly ILogger<CreateResumeHandler> logger;
+    private readonly GetResumesByUserIdRequestValidator _validator;
+    private readonly IResumeService _resumeService;
+    private readonly IMapper _mapper;
+    private readonly ILogger<CreateResumeHandler> _logger;
 
     public GetAllResumesByUserIdHandler(GetResumesByUserIdRequestValidator validator, IResumeService resumeService,
         IMapper mapper, ILogger<CreateResumeHandler> logger)
     {
-        this.mapper = mapper;
-        this.resumeService = resumeService;
-        this.validator = validator;
-        this.logger = logger;
+        _mapper = mapper;
+        _resumeService = resumeService;
+        _validator = validator;
+        _logger = logger;
     }
 
     public async Task<GetResumesByUserIdResponse> Handle(GetResumesByUserIdRequest request,
         CancellationToken ct = default)
     {
-        var validationResult = await validator.ValidateAsync(request, ct);
+        var validationResult = await _validator.ValidateAsync(request, ct);
         BadRequestException.ThrowByValidationResult(validationResult);
 
-        var resumes = await resumeService.GetAllResumesByUserIdAsync(request.UserId, ct);
+        var resumes = await _resumeService.GetAllResumesByUserIdAsync(request.UserId, ct);
 
-        logger.LogInformation($"Resumes of user with id {request.UserId} were successfully sent to him.");
+        _logger.LogInformation($"Resumes of user with id {request.UserId} were successfully sent to him.");
         return new GetResumesByUserIdResponse
         {
             Resumes = resumes
-                .Select(mapper.Map<ResumeDto>).ToArray()
+                .Select(_mapper.Map<ResumeDto>).ToArray()
         };
     }
 }

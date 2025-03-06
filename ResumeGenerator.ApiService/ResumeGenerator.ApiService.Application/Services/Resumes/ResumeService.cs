@@ -8,26 +8,26 @@ namespace ResumeGenerator.ApiService.Application.Services.Resumes;
 
 public sealed class ResumeService : IResumeService
 {
-    private readonly AppDbContext context;
-    private readonly IMapper mapper;
+    private readonly AppDbContext _context;
+    private readonly IMapper _mapper;
 
     public ResumeService(AppDbContext context, IMapper mapper)
     {
-        this.context = context;
-        this.mapper = mapper;
+        _context = context;
+        _mapper = mapper;
     }
 
     public async Task<Resume> CreateResumeAsync(ResumeDto resume, CancellationToken ct = default)
     {
-        var newResume = mapper.Map<Resume>(resume);
-        context.Resumes.Add(newResume);
-        await context.SaveChangesAsync(ct);
+        var newResume = _mapper.Map<Resume>(resume);
+        _context.Resumes.Add(newResume);
+        await _context.SaveChangesAsync(ct);
 
         return newResume;
     }
 
     public Task<List<Resume>> GetAllResumesByUserIdAsync(Guid userId, CancellationToken ct = default)
-        => context.Resumes
+        => _context.Resumes
             .Where(resume => resume.UserId == userId)
             .ToListAsync(ct);
 }

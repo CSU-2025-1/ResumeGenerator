@@ -1,5 +1,4 @@
 ﻿namespace ResumeGenerator.ApiService.Application.DTO;
-
 public sealed  record ResumeDto
 {
     public Guid Id { get; init; }
