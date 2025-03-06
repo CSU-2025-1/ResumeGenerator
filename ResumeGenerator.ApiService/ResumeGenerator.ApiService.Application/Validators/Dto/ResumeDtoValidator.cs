@@ -3,7 +3,7 @@ using ResumeGenerator.ApiService.Application.DTO;
 
 namespace ResumeGenerator.ApiService.Application.Validators.Dto;
 
-public class ResumeDtoValidator: AbstractValidator<ResumeDto>
+public sealed class ResumeDtoValidator: AbstractValidator<ResumeDto>
 {
     public ResumeDtoValidator()
     {

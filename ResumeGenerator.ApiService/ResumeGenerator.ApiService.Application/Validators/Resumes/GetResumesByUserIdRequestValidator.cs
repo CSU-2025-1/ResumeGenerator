@@ -3,7 +3,7 @@ using ResumeGenerator.ApiService.Application.DTO.Requests.Resumes;
 
 namespace ResumeGenerator.ApiService.Application.Validators.Resumes;
 
-public class GetResumesByUserIdRequestValidator: AbstractValidator<GetResumesByUserIdRequest>
+public sealed class GetResumesByUserIdRequestValidator : AbstractValidator<GetResumesByUserIdRequest>
 {
     public GetResumesByUserIdRequestValidator()
     {

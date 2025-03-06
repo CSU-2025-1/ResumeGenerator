@@ -3,7 +3,7 @@ using ResumeGenerator.ApiService.Application.Results;
 
 namespace ResumeGenerator.ApiService.Application.Exceptions;
 
-public class UnauthorizedException : ExceptionBase
+public sealed class UnauthorizedException : ExceptionBase
 {
     public override int StatusCode => StatusCodes.Status401Unauthorized;
 

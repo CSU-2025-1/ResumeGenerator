@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace ResumeGenerator.ApiService.Application.Exceptions;
 
-public class BadRequestException : ExceptionBase
+public sealed class BadRequestException : ExceptionBase
 {
     public override int StatusCode => StatusCodes.Status400BadRequest;
 

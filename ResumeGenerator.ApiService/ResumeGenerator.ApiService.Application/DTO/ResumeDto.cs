@@ -1,19 +1,19 @@
 ﻿namespace ResumeGenerator.ApiService.Application.DTO;
 
-public record ResumeDto
+public sealed  record ResumeDto
 {
-    public Guid Id { get; set; }
-    public Guid UserId { get; set; } //Костыль на время пока Аутха нет
-    public string UserFirstName { get; set; }
-    public string UserLastName { get; set; }
-    public string UserPatronymic { get; set; }
-    public string DesiredPosition { get; set; }
-    public string GitHubLink { get; set; }
-    public string TelegramLink { get; set; }
-    public string Email { get; set; }
-    public string PhoneNumber { get; set; }
-    public string Education { get; set; }
-    public int ExperienceYears { get; set; }
-    public string HardSkills { get; set; }
-    public string SoftSkills { get; set; }
+    public Guid Id { get; init; }
+    public Guid UserId { get; init; } //Костыль на время пока Аутха нет
+    public string UserFirstName { get; init; }
+    public string UserLastName { get; init; }
+    public string UserPatronymic { get; init; }
+    public string DesiredPosition { get; init; }
+    public string GitHubLink { get; init; }
+    public string TelegramLink { get; init; }
+    public string Email { get; init; }
+    public string PhoneNumber { get; init; }
+    public string Education { get; init; }
+    public int ExperienceYears { get; init; }
+    public string HardSkills { get; init; }
+    public string SoftSkills { get; init; }
 }

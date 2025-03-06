@@ -9,20 +9,29 @@ using ResumeGenerator.ApiService.Application.Validators.Resumes;
 
 namespace ResumeGenerator.ApiService.Application.Handlers.Resumes;
 
-public class GetAllResumesByUserIdHandler(
-    GetResumesByUserIdRequestValidator validator,
-    IResumeService resumeService,
-    IMapper mapper,
-    ILogger<CreateResumeHandler> logger
-)
+public sealed class GetAllResumesByUserIdHandler
 {
+    private readonly GetResumesByUserIdRequestValidator validator;
+    private readonly IResumeService resumeService;
+    private readonly IMapper mapper;
+    private readonly ILogger<CreateResumeHandler> logger;
+
+    public GetAllResumesByUserIdHandler(GetResumesByUserIdRequestValidator validator, IResumeService resumeService,
+        IMapper mapper, ILogger<CreateResumeHandler> logger)
+    {
+        this.mapper = mapper;
+        this.resumeService = resumeService;
+        this.validator = validator;
+        this.logger = logger;
+    }
+
     public async Task<GetResumesByUserIdResponse> Handle(GetResumesByUserIdRequest request,
         CancellationToken ct = default)
     {
         var validationResult = await validator.ValidateAsync(request, ct);
         BadRequestException.ThrowByValidationResult(validationResult);
 
-        var resumes = await resumeService.GetAllResumesByUserIdAsync(request, ct);
+        var resumes = await resumeService.GetAllResumesByUserIdAsync(request.UserId, ct);
 
         logger.LogInformation($"Resumes of user with id {request.UserId} were successfully sent to him.");
         return new GetResumesByUserIdResponse

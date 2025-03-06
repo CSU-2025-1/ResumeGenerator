@@ -4,7 +4,7 @@ using ResumeGenerator.ApiService.Application.Validators.Dto;
 
 namespace ResumeGenerator.ApiService.Application.Validators.Resumes;
 
-public class CreateResumeRequestValidator: AbstractValidator<CreateResumeRequest>
+public sealed class CreateResumeRequestValidator : AbstractValidator<CreateResumeRequest>
 {
     public CreateResumeRequestValidator(ResumeDtoValidator resumeDtoValidator)
     {

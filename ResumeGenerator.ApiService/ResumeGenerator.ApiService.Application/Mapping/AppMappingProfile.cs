@@ -3,7 +3,7 @@ using ResumeGenerator.ApiService.Data.Entities;
 
 namespace ResumeGenerator.ApiService.Application.Mapping;
 
-public class AppMappingProfile : MappingProfileBase
+public sealed class AppMappingProfile : MappingProfileBase
 {
     public AppMappingProfile()
     {
