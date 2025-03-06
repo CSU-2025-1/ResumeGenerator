@@ -6,8 +6,17 @@ using ResumeGenerator.ApiService.Data.Entities;
 
 namespace ResumeGenerator.ApiService.Application.Services.Resumes;
 
-public sealed class ResumeService(AppDbContext context, IMapper mapper) : IResumeService
+public sealed class ResumeService : IResumeService
 {
+    private readonly AppDbContext context;
+    private readonly IMapper mapper;
+
+    public ResumeService(AppDbContext context, IMapper mapper)
+    {
+        this.context = context;
+        this.mapper = mapper;
+    }
+
     public async Task<Resume> CreateResumeAsync(ResumeDto resume, CancellationToken ct = default)
     {
         var newResume = mapper.Map<Resume>(resume);
