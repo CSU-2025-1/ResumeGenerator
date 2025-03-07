@@ -1,5 +1,3 @@
-using Web;
-
 namespace ResumeGenerator.ApiService.Web;
 
 internal static class Program
@@ -11,7 +9,7 @@ internal static class Program
             {
                 webBuilder.UseStartup<Startup>()
                     .UseConfiguration(new ConfigurationBuilder()
-                        .AddJsonFile("development_config.json")
+                        .AddJsonFile("appsettings.Development.json")
                         .Build());
             })
             .Build()

@@ -6,7 +6,7 @@ using ResumeGenerator.ApiService.Web.Initializers;
 using ResumeGenerator.ApiService.Web.Middlewares;
 using Serilog;
 
-namespace Web;
+namespace ResumeGenerator.ApiService.Web;
 
 public sealed class Startup
 {
@@ -27,9 +27,7 @@ public sealed class Startup
         services.AddSwagger();
 
         services.AddDataLayerServices(_configuration);
-
-        services.AddCors();
-
+        
         services.AddControllers();
 
         services.AddValidators();
@@ -48,23 +46,15 @@ public sealed class Startup
 
     public void Configure(IApplicationBuilder app)
     {
+        app.UseMiddleware<ErrorHandlingMiddleware>();
+        
         if (_environment.IsDevelopment())
         {
             app.UseSwagger();
             app.UseSwaggerUI();
         }
 
-        app.UseCors(builder =>
-            builder
-                //.WithOrigins("http://localhost:3000", "http://localhost:5173", "http://localhost:5174")
-                .AllowAnyOrigin()
-                .WithMethods(
-                    HttpMethods.Get,
-                    HttpMethods.Post
-                ));
-
         app.UseRouting();
-        app.UseMiddleware<ErrorHandlingMiddleware>();
 
         app.UseAuthentication();
         app.UseAuthorization();

@@ -2,12 +2,11 @@
 
 namespace ResumeGenerator.ApiService.Web.Models;
 
-public class ServerErrorModel
+public sealed class ServerErrorModel
 {
+    public Error Error { get; init; }
     public ServerErrorModel(Error error)
     {
         Error = error;
     }
-
-    public Error Error { get; init; }
 }
