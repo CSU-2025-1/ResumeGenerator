@@ -1,7 +1,22 @@
-using ResumeGenerator.GeneratorService.Worker;
+using ResumeGenerator.GeneratorService.Core.Entities;
+using ResumeGenerator.GeneratorService.Core.Interfaces;
 
-var builder = Host.CreateApplicationBuilder(args);
-builder.Services.AddHostedService<Worker>();
+namespace ResumeGenerator.GeneratorService.Worker;
 
-var host = builder.Build();
-host.Run();
+public static class Program
+{
+    public static void Main(string[] args)
+    {
+        HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+        
+        builder.Services.Configure<ResumeTemplates>(
+            builder.Configuration.GetSection(nameof(ResumeTemplates))
+        );
+
+        builder.Services.AddHostedService<Worker>();
+        builder.Services.AddSingleton<IResumeGenerator, Infrastructure.Generating.ResumeGenerator>();
+
+        IHost host = builder.Build();
+        host.Run();
+    }
+}
