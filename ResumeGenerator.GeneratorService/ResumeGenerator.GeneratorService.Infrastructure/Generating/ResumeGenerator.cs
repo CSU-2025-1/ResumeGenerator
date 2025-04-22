@@ -5,31 +5,33 @@ using ResumeGenerator.GeneratorService.Core.Interfaces;
 
 namespace ResumeGenerator.GeneratorService.Infrastructure.Generating;
 
-public class ResumeGenerator : IResumeGenerator
+public sealed class ResumeGenerator : IResumeGenerator
 {
     private readonly string _template;
-    
+
     public ResumeGenerator(IOptions<ResumeTemplates> options)
     {
         string templatePath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory, options.Value.TemplateFolderPath, options.Value.PdfTemplateName);
-        
+
         if (!File.Exists(templatePath))
+        {
             throw new FileNotFoundException($"HTML template file not found on path:\n{templatePath}");
-        
+        }
+
         _template = File.ReadAllText(templatePath);
     }
-    
+
     public byte[] GeneratePdf(in Resume resume, in PdfParameters parameters) => HtmlConverter.FromHtmlString(
-        GenerateHtml(resume), 
-        parameters.Width, 
-        parameters.Height, 
-        parameters.Quality, 
-        parameters.Dpi, 
-        parameters.MarginLeft, 
-        parameters.MarginTop, 
-        parameters.MarginRight, 
-        parameters.MarginBottom, 
+        GenerateHtml(resume),
+        parameters.Width,
+        parameters.Height,
+        parameters.Quality,
+        parameters.Dpi,
+        parameters.MarginLeft,
+        parameters.MarginTop,
+        parameters.MarginRight,
+        parameters.MarginBottom,
         parameters.Encoding
     );
 
