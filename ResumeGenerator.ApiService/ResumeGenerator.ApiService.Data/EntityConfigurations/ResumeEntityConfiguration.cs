@@ -1,0 +1,32 @@
+﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using ResumeGenerator.ApiService.Data.Entities;
+
+namespace ResumeGenerator.ApiService.Data.EntityConfigurations;
+
+public sealed class ResumeEntityConfiguration : IEntityTypeConfiguration<Resume>
+{
+    public void Configure(EntityTypeBuilder<Resume> builder)
+    {
+        builder.ToTable("users");
+
+        builder.HasKey(u => u.Id);
+
+        builder.Property(u => u.Id).HasColumnName("id");
+        builder.Property(u => u.UserId).HasColumnName("user_id");
+        builder.Property(u => u.UserFirstName).HasColumnName("user_first_name");
+        builder.Property(u => u.UserLastName).HasColumnName("user_last_name");
+        builder.Property(u => u.UserPatronymic).HasColumnName("user_patronymic");
+        builder.Property(u => u.DesiredPosition).HasColumnName("desired_position");
+        builder.Property(u => u.GitHubLink).HasColumnName("github_link");
+        builder.Property(u => u.TelegramLink).HasColumnName("telegram_link");
+        builder.Property(u => u.Email).HasColumnName("email");
+        builder.Property(u => u.PhoneNumber).HasColumnName("phone_number");
+        builder.Property(u => u.Education).HasColumnName("education");
+        builder.Property(u => u.ExperienceYears).HasColumnName("experience_years");
+        builder.Property(u => u.HardSkills).HasColumnName("hard_skills");
+        builder.Property(u => u.SoftSkills).HasColumnName("soft_skills");
+
+        builder.HasIndex(u => u.UserId).IsUnique();
+    }
+}
