@@ -33,7 +33,8 @@ public sealed class GetAllResumesByUserIdHandler
 
         var resumes = await _resumeService.GetAllResumesByUserIdAsync(request.UserId, ct);
 
-        _logger.LogInformation($"Resumes of user with id {request.UserId} were successfully sent to him.");
+        _logger.LogInformation("Resumes of user with id {UserId} were successfully sent to him.", request.UserId);
+
         return new GetResumesByUserIdResponse
         {
             Resumes = resumes

@@ -9,12 +9,8 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddDataLayerServices(this IServiceCollection services,
         IConfiguration configuration)
-    {
-        services.AddDbContext<AppDbContext>(options =>
+        => services.AddDbContext<AppDbContext>(options =>
         {
             options.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
         });
-
-        return services;
-    }
 }

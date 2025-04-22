@@ -23,24 +23,22 @@ public sealed class ErrorHandlingMiddleware : IMiddleware
         }
         catch (Exception ex)
         {
-            string newContent;
             ServerErrorModel errorModel;
             switch (ex)
             {
                 case ExceptionBase customExceptionBase:
                     context.Response.StatusCode = customExceptionBase.StatusCode;
                     errorModel = new ServerErrorModel(customExceptionBase.Error);
-                    _logger.LogError($"[{errorModel.Error.Code}]: {errorModel.Error.Description}");
-                    newContent = JsonSerializer.Serialize(errorModel);
                     break;
                 default:
                     context.Response.StatusCode = StatusCodes.Status500InternalServerError;
-                    errorModel = new ServerErrorModel(
-                        new Error(ex.GetType().ToString(), ex.Message));
-                    _logger.LogError($"[{errorModel.Error.Code}]: {errorModel.Error.Description}");
-                    newContent = JsonSerializer.Serialize(errorModel);
+                    errorModel = new ServerErrorModel(new Error(ex.GetType().ToString(), ex.Message));
                     break;
             }
+
+            _logger.LogError("[{Code}]: {Description}",
+                errorModel.Error.Code, errorModel.Error.Description);
+            string newContent = JsonSerializer.Serialize(errorModel);
 
             context.Response.ContentType = MediaTypeNames.Application.Json;
             await context.Response.WriteAsync(newContent);

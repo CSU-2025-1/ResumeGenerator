@@ -27,7 +27,7 @@ public sealed class CreateResumeHandler
 
         var resume = await _resumeService.CreateResumeAsync(request.Resume, ct);
 
-        _logger.LogInformation($"User with id {request.Resume.UserId} successfully " +
-                               $"created wish with id {resume.Id}.");
+        _logger.LogInformation("User with id {UserId} successfully created wish with id {ResumeId}.",
+            request.Resume.UserId, resume.Id);
     }
 }

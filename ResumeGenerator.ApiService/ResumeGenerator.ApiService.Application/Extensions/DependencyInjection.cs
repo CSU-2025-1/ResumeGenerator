@@ -8,30 +8,15 @@ namespace ResumeGenerator.ApiService.Application.Extensions;
 
 public static class DependencyInjection
 {
-     public static IServiceCollection AddHandlers(this IServiceCollection services)
-    {
-        //Resume handlers
-        services.AddScoped<CreateResumeHandler>();
-        services.AddScoped<GetAllResumesByUserIdHandler>();
-        
-        return services;
-    }
+    public static IServiceCollection AddHandlers(this IServiceCollection services)
+        => services.AddScoped<CreateResumeHandler>()
+            .AddScoped<GetAllResumesByUserIdHandler>();
 
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
-    {
-        services.AddScoped<IResumeService, ResumeService>();
-        return services;
-    }
+        => services.AddScoped<IResumeService, ResumeService>();
 
     public static IServiceCollection AddValidators(this IServiceCollection services)
-    {
-        //Resume validators
-        services.AddScoped<CreateResumeRequestValidator>();
-        services.AddScoped<GetResumesByUserIdRequestValidator>();
-        
-        //Dto validators
-        services.AddScoped<ResumeDtoValidator>();
-        
-        return services;
-    }
+        => services.AddScoped<CreateResumeRequestValidator>()
+            .AddScoped<GetResumesByUserIdRequestValidator>()
+            .AddScoped<ResumeDtoValidator>();
 }

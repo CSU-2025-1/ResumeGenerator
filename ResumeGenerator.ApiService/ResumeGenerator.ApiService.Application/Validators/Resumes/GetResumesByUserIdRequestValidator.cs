@@ -8,6 +8,6 @@ public sealed class GetResumesByUserIdRequestValidator : AbstractValidator<GetRe
     public GetResumesByUserIdRequestValidator()
     {
         RuleFor(request => request.UserId)
-            .NotEqual(Guid.Empty);
+            .NotEmpty();
     }
 }

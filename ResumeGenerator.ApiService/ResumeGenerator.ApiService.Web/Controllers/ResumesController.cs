@@ -6,8 +6,8 @@ using ResumeGenerator.ApiService.Application.Handlers.Resumes;
 namespace ResumeGenerator.ApiService.Web.Controllers;
 
 [ApiController]
-[Route("/api/v1/resumes")]
-public sealed class ResumeController : ControllerBase
+[Route("/api/v1/[controller]")]
+public sealed class ResumesController : ControllerBase
 {
     [HttpGet]
     public Task<GetResumesByUserIdResponse> GetAllResumesByUserId(
