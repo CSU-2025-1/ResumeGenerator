@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+  
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-ResumeGenerator.GeneratorService.Worker-a00cb225-3434-48a8-a7c3-f349ed4aaa9f</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="HtmlToPdfMaster" Version="1.0.0.4" />
+    <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ResumeGenerator.GeneratorService.Core\ResumeGenerator.GeneratorService.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="Templates\ResumeTemplate.html" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>
