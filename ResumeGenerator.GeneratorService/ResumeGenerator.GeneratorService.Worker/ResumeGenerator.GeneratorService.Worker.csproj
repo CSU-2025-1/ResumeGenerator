@@ -9,10 +9,13 @@
     </PropertyGroup>
 
     <ItemGroup>
+        <PackageReference Include="MassTransit" Version="8.4.0" />
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0" />
         <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.1"/>
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\ResumeGenerator.Common\ResumeGenerator.Common.csproj" />
         <ProjectReference Include="..\ResumeGenerator.GeneratorService.Core\ResumeGenerator.GeneratorService.Core.csproj" />
         <ProjectReference Include="..\ResumeGenerator.GeneratorService.Infrastructure\ResumeGenerator.GeneratorService.Infrastructure.csproj" />
     </ItemGroup>

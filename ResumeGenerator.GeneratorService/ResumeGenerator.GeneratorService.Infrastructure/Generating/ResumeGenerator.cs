@@ -11,6 +11,7 @@ public sealed class ResumeGenerator : IResumeGenerator
 
     public ResumeGenerator(IOptions<ResumeTemplates> options)
     {
+        string a = Directory.GetCurrentDirectory();
         string templatePath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory, options.Value.TemplateFolderPath, options.Value.PdfTemplateName);
 
