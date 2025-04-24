@@ -8,7 +8,7 @@ public sealed class ResumeEntityConfiguration : IEntityTypeConfiguration<Resume>
 {
     public void Configure(EntityTypeBuilder<Resume> builder)
     {
-        builder.ToTable("users");
+        builder.ToTable("resumes");
 
         builder.HasKey(u => u.Id);
 

@@ -28,6 +28,8 @@ public sealed class ResumeService : IResumeService
         await _context.SaveChangesAsync(ct);
 
         await _bus.Publish(new CreateResumeCommand(
+            ResumeId: resume.Id,
+            UserId: resume.UserId,
             FirstName: resume.UserFirstName,
             LastName: resume.UserLastName,
             MiddleName: resume.UserPatronymic,
@@ -37,9 +39,9 @@ public sealed class ResumeService : IResumeService
             Email: resume.Email,
             PhoneNumber: resume.PhoneNumber,
             Education: resume.Education,
-            Experience: resume.ExperienceYears.ToString(),
-            HardSkills: resume.HardSkills.Split(", "),
-            SoftSkills: resume.HardSkills.Split(", ")
+            ExperienceYears: resume.ExperienceYears,
+            HardSkills: resume.HardSkills,
+            SoftSkills: resume.HardSkills
         ), ct);
 
         return newResume;
