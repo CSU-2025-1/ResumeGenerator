@@ -1,4 +1,5 @@
-﻿using ResumeGenerator.ApiService.Application.Extensions;
+﻿using MassTransit;
+using ResumeGenerator.ApiService.Application.Extensions;
 using ResumeGenerator.ApiService.Application.Mapping;
 using ResumeGenerator.ApiService.Data.Extentions;
 using ResumeGenerator.ApiService.Web.Extensions;
@@ -27,7 +28,7 @@ public sealed class Startup
         services.AddSwagger();
 
         services.AddDataLayerServices(_configuration);
-        
+
         services.AddControllers();
 
         services.AddValidators();
@@ -40,6 +41,20 @@ public sealed class Startup
             .MinimumLevel.Debug()
             .CreateLogger();
 
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((ctx, cfg) =>
+            {
+                cfg.Host(_configuration["RabbitMq:Host"], _configuration["RabbitMq:VirtualHost"], h =>
+                {
+                    h.Username(_configuration["RabbitMq:Username"] ?? string.Empty);
+                    h.Password(_configuration["RabbitMq:Password"] ?? string.Empty);
+                });
+
+                cfg.ConfigureEndpoints(ctx);
+            });
+        });
+
         services.AddSingleton<ErrorHandlingMiddleware>();
         services.AddAsyncInitializer<MigrationAsyncInitializer>();
     }
@@ -47,7 +62,7 @@ public sealed class Startup
     public void Configure(IApplicationBuilder app)
     {
         app.UseMiddleware<ErrorHandlingMiddleware>();
-        
+
         if (_environment.IsDevelopment())
         {
             app.UseSwagger();
