@@ -1,5 +1,11 @@
 ﻿<Solution>
-  <Project Path="ResumeGenerator.GeneratorService.Core\ResumeGenerator.GeneratorService.Core.csproj" Type="Classic C#" />
-  <Project Path="ResumeGenerator.GeneratorService.Infrastructure\ResumeGenerator.GeneratorService.Infrastructure.csproj" Type="Classic C#" />
-  <Project Path="ResumeGenerator.GeneratorService.Worker\ResumeGenerator.GeneratorService.Worker.csproj" Type="Classic C#" />
+    <Project Path="ResumeGenerator.GeneratorService.Core\ResumeGenerator.GeneratorService.Core.csproj"
+             Type="Classic C#"/>
+    <Project
+            Path="ResumeGenerator.GeneratorService.Infrastructure\ResumeGenerator.GeneratorService.Infrastructure.csproj"
+            Type="Classic C#"/>
+    <Project Path="ResumeGenerator.GeneratorService.Worker\ResumeGenerator.GeneratorService.Worker.csproj"
+             Type="Classic C#"/>
+    <Project Path="..\ResumeGenerator.Common\ResumeGenerator.Common.csproj"
+             Type="Classic C#"/>
 </Solution>
