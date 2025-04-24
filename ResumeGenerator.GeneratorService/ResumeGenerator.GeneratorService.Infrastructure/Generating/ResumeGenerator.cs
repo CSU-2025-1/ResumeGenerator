@@ -11,7 +11,6 @@ public sealed class ResumeGenerator : IResumeGenerator
 
     public ResumeGenerator(IOptions<ResumeTemplates> options)
     {
-        string a = Directory.GetCurrentDirectory();
         string templatePath = Path.Combine(
             AppDomain.CurrentDomain.BaseDirectory, options.Value.TemplateFolderPath, options.Value.PdfTemplateName);
 
@@ -36,7 +35,7 @@ public sealed class ResumeGenerator : IResumeGenerator
         parameters.Encoding
     );
 
-    public string GenerateHtml(in Resume resume) => string.Format(_template, [
+    public string GenerateHtml(in Resume resume) => string.Format(_template,
         resume.FirstName, resume.MiddleName, resume.LastName,
         resume.DesiredPosition,
         resume.GitHubLink,
@@ -44,8 +43,8 @@ public sealed class ResumeGenerator : IResumeGenerator
         resume.Email,
         resume.PhoneNumber,
         resume.Education,
-        resume.Experience,
-        string.Join(", ", resume.HardSkills),
-        string.Join(", ", resume.SoftSkills)
-    ]);
+        resume.ExperienceYears.ToString(),
+        resume.HardSkills,
+        resume.SoftSkills
+    );
 }
