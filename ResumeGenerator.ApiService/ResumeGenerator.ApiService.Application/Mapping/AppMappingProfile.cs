@@ -8,5 +8,6 @@ public sealed class AppMappingProfile : MappingProfileBase
     public AppMappingProfile()
     {
         CreateMap<Resume, ResumeDto>();
+        CreateMap<ResumeDto, Resume>();
     }
 }
