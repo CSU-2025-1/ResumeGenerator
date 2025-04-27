@@ -17,6 +17,6 @@ public sealed class Resume
     public string Education { get; set; }
     public int ExperienceYears { get; set; }
 
-    public List<HardSkill> HardSkills { get; set; } = new();
-    public List<SoftSkill> SoftSkills { get; set; } = new();
+    public ICollection<HardSkill> HardSkills { get; set; } = [];
+    public ICollection<SoftSkill> SoftSkills { get; set; } = [];
 }

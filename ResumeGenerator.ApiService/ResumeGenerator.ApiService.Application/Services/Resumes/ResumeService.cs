@@ -27,22 +27,7 @@ public sealed class ResumeService : IResumeService
         _context.Resumes.Add(newResume);
         await _context.SaveChangesAsync(ct);
 
-        await _bus.Publish(new CreateResumeCommand(
-            ResumeId: newResume.Id,
-            UserId: newResume.UserId,
-            FirstName: newResume.UserFirstName,
-            LastName: newResume.UserLastName,
-            MiddleName: newResume.UserPatronymic,
-            DesiredPosition: newResume.DesiredPosition,
-            GitHubLink: newResume.GitHubLink,
-            TelegramLink: newResume.TelegramLink,
-            Email: newResume.Email,
-            PhoneNumber: newResume.PhoneNumber,
-            Education: newResume.Education,
-            ExperienceYears: newResume.ExperienceYears,
-            HardSkills: newResume.HardSkills.Select( skill => skill.HardSkillName).ToArray(),
-            SoftSkills: newResume.SoftSkills.Select( skill => skill.SoftSkillName).ToArray()
-        ), ct);
+        await _bus.Publish( _mapper.Map<CreateResumeCommand>(newResume), ct);
 
         return newResume;
     }
