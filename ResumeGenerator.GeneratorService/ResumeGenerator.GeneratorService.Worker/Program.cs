@@ -14,7 +14,7 @@ public static class Program
             builder.Configuration.GetSection(nameof(ResumeTemplates))
         );
 
-        // builder.Services.AddHostedService<Worker>();
+        //builder.Services.AddHostedService<Worker>();
         builder.Services.AddSingleton<IResumeGenerator, Infrastructure.Generating.ResumeGenerator>();
         builder.Services.AddMassTransit(x =>
         {
