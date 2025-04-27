@@ -16,6 +16,7 @@ public sealed class Resume
     public string PhoneNumber { get; set; }
     public string Education { get; set; }
     public int ExperienceYears { get; set; }
-    public string HardSkills { get; set; }
-    public string SoftSkills { get; set; }
+
+    public List<HardSkill> HardSkills { get; set; } = new();
+    public List<SoftSkill> SoftSkills { get; set; } = new();
 }

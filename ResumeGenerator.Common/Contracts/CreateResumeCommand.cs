@@ -13,6 +13,6 @@ public sealed record CreateResumeCommand(
     string PhoneNumber,
     string Education,
     int ExperienceYears,
-    string HardSkills,
-    string SoftSkills
+    string[] HardSkills,
+    string[] SoftSkills
 );

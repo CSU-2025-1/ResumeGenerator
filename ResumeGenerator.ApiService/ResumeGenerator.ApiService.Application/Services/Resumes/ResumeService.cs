@@ -28,20 +28,20 @@ public sealed class ResumeService : IResumeService
         await _context.SaveChangesAsync(ct);
 
         await _bus.Publish(new CreateResumeCommand(
-            ResumeId: resume.Id,
-            UserId: resume.UserId,
-            FirstName: resume.UserFirstName,
-            LastName: resume.UserLastName,
-            MiddleName: resume.UserPatronymic,
-            DesiredPosition: resume.DesiredPosition,
-            GitHubLink: resume.GitHubLink,
-            TelegramLink: resume.TelegramLink,
-            Email: resume.Email,
-            PhoneNumber: resume.PhoneNumber,
-            Education: resume.Education,
-            ExperienceYears: resume.ExperienceYears,
-            HardSkills: resume.HardSkills,
-            SoftSkills: resume.HardSkills
+            ResumeId: newResume.Id,
+            UserId: newResume.UserId,
+            FirstName: newResume.UserFirstName,
+            LastName: newResume.UserLastName,
+            MiddleName: newResume.UserPatronymic,
+            DesiredPosition: newResume.DesiredPosition,
+            GitHubLink: newResume.GitHubLink,
+            TelegramLink: newResume.TelegramLink,
+            Email: newResume.Email,
+            PhoneNumber: newResume.PhoneNumber,
+            Education: newResume.Education,
+            ExperienceYears: newResume.ExperienceYears,
+            HardSkills: newResume.HardSkills.Select( skill => skill.HardSkillName).ToArray(),
+            SoftSkills: newResume.SoftSkills.Select( skill => skill.SoftSkillName).ToArray()
         ), ct);
 
         return newResume;

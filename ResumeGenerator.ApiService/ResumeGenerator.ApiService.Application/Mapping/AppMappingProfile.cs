@@ -7,7 +7,18 @@ public sealed class AppMappingProfile : MappingProfileBase
 {
     public AppMappingProfile()
     {
-        CreateMap<Resume, ResumeDto>();
-        CreateMap<ResumeDto, Resume>();
+        CreateMap<Resume, ResumeDto>()
+            .ForMember(dest => dest.HardSkills,
+                opt => opt.MapFrom(src => string.Join(", ", src.HardSkills.Select(h => h.HardSkillName))))
+            .ForMember(dest => dest.SoftSkills,
+                opt => opt.MapFrom(src => string.Join(", ", src.SoftSkills.Select(s => s.SoftSkillName))));
+        
+        CreateMap<ResumeDto, Resume>()
+            .ForMember(dest => dest.HardSkills, opt => opt.MapFrom(src => src.HardSkills
+                .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .Select(name => new HardSkill { HardSkillName = name }).ToList()))
+            .ForMember(dest => dest.SoftSkills, opt => opt.MapFrom(src => src.SoftSkills
+                .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .Select(name => new SoftSkill { SoftSkillName = name }).ToList()));
     }
 }
