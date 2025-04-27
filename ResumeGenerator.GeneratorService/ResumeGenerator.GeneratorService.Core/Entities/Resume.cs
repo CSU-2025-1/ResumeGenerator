@@ -13,6 +13,6 @@ public readonly record struct Resume(
     string PhoneNumber,
     string Education,
     int ExperienceYears,
-    string HardSkills,
-    string SoftSkills
+    string[] HardSkills,
+    string[] SoftSkills
 );

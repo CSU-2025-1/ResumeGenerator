@@ -44,7 +44,7 @@ public sealed class ResumeGenerator : IResumeGenerator
         resume.PhoneNumber,
         resume.Education,
         resume.ExperienceYears.ToString(),
-        resume.HardSkills,
-        resume.SoftSkills
+        string.Join(", ", resume.HardSkills),
+        string.Join(", ", resume.SoftSkills)
     );
 }
