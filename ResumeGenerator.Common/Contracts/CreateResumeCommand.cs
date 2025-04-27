@@ -1,6 +1,8 @@
 namespace ResumeGenerator.Common.Contracts;
 
 public sealed record CreateResumeCommand(
+    Guid ResumeId,
+    Guid UserId,
     string FirstName,
     string LastName,
     string MiddleName,
@@ -10,7 +12,7 @@ public sealed record CreateResumeCommand(
     string Email,
     string PhoneNumber,
     string Education,
-    string Experience,
+    int ExperienceYears,
     string[] HardSkills,
     string[] SoftSkills
 );
