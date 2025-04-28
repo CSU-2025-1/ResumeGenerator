@@ -16,8 +16,8 @@ services:
 
   worker:
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./ResumeGenerator.GeneratorService
+      dockerfile: ResumeGenerator.GeneratorService.Worker/Dockerfile
     depends_on:
       - minio
     environment:
