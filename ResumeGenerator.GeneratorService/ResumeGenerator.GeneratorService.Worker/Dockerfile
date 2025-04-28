@@ -1,17 +1,21 @@
 ﻿FROM mcr.microsoft.com/dotnet/runtime:9.0 AS base
-USER $APP_UID
 WORKDIR /app
+USER $APP_UID
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
 
+COPY ["ResumeGenerator.GeneratorService.Worker/ResumeGenerator.GeneratorService.Worker.csproj", "ResumeGenerator.GeneratorService.Worker/"]
+COPY ["ResumeGenerator.GeneratorService.Core/ResumeGenerator.GeneratorService.Core.csproj", "ResumeGenerator.GeneratorService.Core/"]
+COPY ["ResumeGenerator.GeneratorService.Infrastructure/ResumeGenerator.GeneratorService.Infrastructure.csproj", "ResumeGenerator.GeneratorService.Infrastructure/"]
+COPY ["ResumeGenerator.Common/ResumeGenerator.Common.csproj", "ResumeGenerator.Common/"]
+
+RUN dotnet restore "ResumeGenerator.GeneratorService.Worker/ResumeGenerator.GeneratorService.Worker.csproj"
+
 COPY . .
 
-WORKDIR /src/ResumeGenerator.GeneratorService.Worker
-
-RUN dotnet restore "ResumeGenerator.GeneratorService.Worker.csproj"
-
+WORKDIR "/src/ResumeGenerator.GeneratorService.Worker"
 RUN dotnet build "ResumeGenerator.GeneratorService.Worker.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish
