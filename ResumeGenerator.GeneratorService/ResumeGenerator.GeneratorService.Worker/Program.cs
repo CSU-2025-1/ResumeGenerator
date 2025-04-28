@@ -1,4 +1,5 @@
 using MassTransit;
+using Minio;
 using ResumeGenerator.GeneratorService.Core.Entities;
 using ResumeGenerator.GeneratorService.Core.Interfaces;
 
@@ -14,7 +15,11 @@ public static class Program
             builder.Configuration.GetSection(nameof(ResumeTemplates))
         );
 
-        //builder.Services.AddHostedService<Worker>();
+        if (builder.Environment.IsDevelopment())
+        {
+            builder.Services.AddHostedService<Worker>();
+        }
+
         builder.Services.AddSingleton<IResumeGenerator, Infrastructure.Generating.ResumeGenerator>();
         builder.Services.AddMassTransit(x =>
         {
@@ -36,6 +41,13 @@ public static class Program
                 });
             });
         });
+
+        builder.Services.AddSingleton<IMinioClient>(_ => new MinioClient()
+            .WithEndpoint("your-minio-url:9000")
+            .WithCredentials("your-access-key", "your-secret-key")
+            .WithSSL()
+            .Build()
+        );
 
         IHost host = builder.Build();
         host.Run();
