@@ -18,5 +18,6 @@
 
   <ItemGroup>
     <None Include="Templates\ResumeTemplate.html" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="Templates\Style.css" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 </Project>

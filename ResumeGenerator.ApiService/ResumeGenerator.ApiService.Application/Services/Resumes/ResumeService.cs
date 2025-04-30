@@ -1,7 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Runtime.InteropServices.JavaScript;
+using AutoMapper;
 using MassTransit;
+using MassTransit.Internals;
+using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResumeGenerator.ApiService.Application.DTO;
+using ResumeGenerator.ApiService.Application.Exceptions;
+using ResumeGenerator.ApiService.Application.Results;
 using ResumeGenerator.ApiService.Data.Context;
 using ResumeGenerator.ApiService.Data.Entities;
 using ResumeGenerator.Common.Contracts;
@@ -27,26 +32,49 @@ public sealed class ResumeService : IResumeService
         _context.Resumes.Add(newResume);
         await _context.SaveChangesAsync(ct);
 
-        await _bus.Publish(new CreateResumeCommand(
-            FirstName: resume.UserFirstName,
-            LastName: resume.UserLastName,
-            MiddleName: resume.UserPatronymic,
-            DesiredPosition: resume.DesiredPosition,
-            GitHubLink: resume.GitHubLink,
-            TelegramLink: resume.TelegramLink,
-            Email: resume.Email,
-            PhoneNumber: resume.PhoneNumber,
-            Education: resume.Education,
-            Experience: resume.ExperienceYears.ToString(),
-            HardSkills: resume.HardSkills.Split(", "),
-            SoftSkills: resume.HardSkills.Split(", ")
-        ), ct);
+        await _bus.Publish(_mapper.Map<CreateResumeCommand>(newResume), ct);
 
         return newResume;
+    }
+    
+    public async Task UpdateResumeStatusAsync(Guid resumeId, ResumeStatus newStatus, CancellationToken ct = default)
+    {
+        var resume = await _context.Resumes.FirstOrDefaultAsync(r => r.Id == resumeId, ct);
+
+        NotFoundException.ThrowIfNull(resume,
+            new Error(StatusCodes.Status404NotFound.ToString(), $"Resume with id: {resumeId} not found in database."));
+
+        resume!.ResumeStatus = newStatus;
+
+        await _context.SaveChangesAsync(ct);
     }
 
     public Task<List<Resume>> GetAllResumesByUserIdAsync(Guid userId, CancellationToken ct = default)
         => _context.Resumes
             .Where(resume => resume.UserId == userId)
             .ToListAsync(ct);
+
+    public async Task<Resume> GetResumeByIdAsync(Guid resumeId, CancellationToken ct = default)
+    {
+        var resume = await _context.Resumes
+            .FirstOrDefaultAsync(r => r.Id == resumeId, ct);
+        
+        NotFoundException.ThrowIfNull(resume,
+            new Error(StatusCodes.Status404NotFound.ToString(), $"Resume with id: {resumeId} not found in database."));
+
+        return resume!;
+    }
+
+    public async Task DeleteResumeByIdAsync(Guid resumeId, CancellationToken ct = default)
+    {
+        var resume = await _context.Resumes
+            .FirstOrDefaultAsync(r => r.Id == resumeId, ct);
+        
+        NotFoundException.ThrowIfNull(resume,
+            new Error(StatusCodes.Status404NotFound.ToString(), $"Resume with id: {resumeId} not found in database."));
+
+        _context.Resumes.Remove(resume!);
+        
+        await _context.SaveChangesAsync(ct);
+    }
 }
