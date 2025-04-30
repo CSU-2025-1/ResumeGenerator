@@ -10,7 +10,9 @@ public static class DependencyInjection
 {
     public static IServiceCollection AddHandlers(this IServiceCollection services)
         => services.AddScoped<CreateResumeHandler>()
-            .AddScoped<GetAllResumesByUserIdHandler>();
+            .AddScoped<GetAllResumesByUserIdHandler>()
+            .AddScoped<GetResumeByIdHandler>()
+            .AddScoped<DeleteResumeByIdHandler>();
 
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         => services.AddScoped<IResumeService, ResumeService>();
@@ -18,5 +20,7 @@ public static class DependencyInjection
     public static IServiceCollection AddValidators(this IServiceCollection services)
         => services.AddScoped<CreateResumeRequestValidator>()
             .AddScoped<GetResumesByUserIdRequestValidator>()
+            .AddScoped<GetResumeByIdRequestValidator>()
+            .AddScoped<DeleteResumeByIdRequestValidator>()
             .AddScoped<ResumeDtoValidator>();
 }
