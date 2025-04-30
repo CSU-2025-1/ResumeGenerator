@@ -42,18 +42,11 @@ public static class Program
             });
         });
 
-        builder.Services.AddSingleton<IMinioClient>(sp =>
-        {
-            var configuration = sp.GetRequiredService<IConfiguration>();
-
-            return new MinioClient()
-                .WithEndpoint(configuration["MINIO_ENDPOINT"])
-                .WithCredentials(
-                    configuration["MINIO_ACCESS_KEY"],
-                    configuration["MINIO_SECRET_KEY"])
-                .WithSSL(false) // true for https
-                .Build();
-        });
+        ConfigurationManager configuration = builder.Configuration;
+        builder.Services.AddMinio(configureClient => configureClient
+            .WithEndpoint(configuration["MINIO_ENDPOINT"])
+            .WithCredentials(configuration["MINIO_ACCESS_KEY"], configuration["MINIO_SECRET_KEY"])
+            .Build());
 
         IHost host = builder.Build();
         host.Run();

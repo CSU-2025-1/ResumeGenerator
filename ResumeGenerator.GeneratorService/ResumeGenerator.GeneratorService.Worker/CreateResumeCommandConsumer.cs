@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using MassTransit;
 using Minio;
 using Minio.DataModel.Args;
@@ -11,6 +12,9 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
 {
     private static readonly PdfParameters Parameters =
         new(148, 210, 100, 100, 4, 4, 4, 4);
+
+    private static readonly BucketExistsArgs ExistsArgs = new BucketExistsArgs().WithBucket(BucketName);
+    private static readonly MakeBucketArgs MakeArgs = new MakeBucketArgs().WithBucket(BucketName);
 
     private const string BucketName = "resumes";
 
@@ -27,13 +31,11 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
     {
         CreateResumeCommand command = context.Message;
 
-        bool exists = await _minioClient.BucketExistsAsync(
-            new BucketExistsArgs().WithBucket(BucketName), context.CancellationToken);
+        bool exists = await _minioClient.BucketExistsAsync(ExistsArgs, context.CancellationToken);
 
         if (!exists)
         {
-            await _minioClient.MakeBucketAsync(new MakeBucketArgs()
-                .WithBucket(BucketName), context.CancellationToken);
+            await _minioClient.MakeBucketAsync(MakeArgs, context.CancellationToken);
         }
 
         using var memoryStream = new MemoryStream(GeneratePdf(command));
@@ -43,7 +45,7 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
                 .WithObject($"{command.ResumeId}.pdf")
                 .WithStreamData(memoryStream)
                 .WithObjectSize(memoryStream.Length)
-                .WithContentType("application/pdf"),
+                .WithContentType(MediaTypeNames.Application.Pdf),
             context.CancellationToken);
     }
 
