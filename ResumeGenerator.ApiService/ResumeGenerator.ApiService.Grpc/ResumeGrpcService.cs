@@ -1,10 +1,9 @@
-﻿using Grpc.Core;
-using ResumeGenerator.Common.Contracts.Grpc;
-using ResumeStatus = ResumeGenerator.ApiService.Data.Entities.ResumeStatus;
+﻿using Google.Protobuf.WellKnownTypes;
+using Grpc.Core;
+using ResumeGenerator.ApiService.Application.Services.Resumes;
+using ResumeGenerator.ApiService.Grpc.grpc;
 
-namespace ResumeGenerator.ApiService.Application.Services.Resumes;
-
-using Google.Protobuf.WellKnownTypes;
+namespace Grpc;
 
 public sealed class ResumeGrpcService : ResumeServiceGrpc.ResumeServiceGrpcBase
 {
@@ -18,7 +17,7 @@ public sealed class ResumeGrpcService : ResumeServiceGrpc.ResumeServiceGrpcBase
     public override async Task<Empty> UpdateResumeStatus(UpdateResumeStatusRequest request, ServerCallContext context)
     {
         var resumeId = Guid.Parse(request.ResumeId);
-        var newStatus = (ResumeStatus)request.NewStatus;
+        var newStatus = (ResumeGenerator.ApiService.Data.Entities.ResumeStatus)request.NewStatus;
 
         await _resumeService.UpdateResumeStatusAsync(resumeId, newStatus, context.CancellationToken);
 

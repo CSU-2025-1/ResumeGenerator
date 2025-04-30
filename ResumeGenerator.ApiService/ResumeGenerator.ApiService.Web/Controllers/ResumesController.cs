@@ -47,6 +47,7 @@ public sealed class ResumesController : ControllerBase
         CancellationToken ct = default)
     {
         await handler.Handle(request, ct);
+        
         return Accepted();
     }
 

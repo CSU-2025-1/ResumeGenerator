@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumeGenerator.ApiService.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumeGenerator.Common", "..\ResumeGenerator.Common\ResumeGenerator.Common.csproj", "{311B432C-1938-4D70-BC3F-D87E1AF00804}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Grpc", "Grpc\Grpc.csproj", "{7CD93384-A952-4556-8769-6F6C43E669DD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumeGenerator.ApiService.Grpc", "ResumeGenerator.ApiService.Grpc\ResumeGenerator.ApiService.Grpc.csproj", "{7CD93384-A952-4556-8769-6F6C43E669DD}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

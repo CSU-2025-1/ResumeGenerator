@@ -1,4 +1,5 @@
-﻿using MassTransit;
+﻿using Grpc;
+using MassTransit;
 using ResumeGenerator.ApiService.Application.Extensions;
 using ResumeGenerator.ApiService.Application.Mapping;
 using ResumeGenerator.ApiService.Application.Services.Resumes;
