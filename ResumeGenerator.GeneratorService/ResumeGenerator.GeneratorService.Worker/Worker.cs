@@ -16,27 +16,18 @@ public class Worker : BackgroundService
     
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
-        /*
         string path = Path.Combine(Directory.GetCurrentDirectory(), "MyPdf.pdf");
         
-        var resume = new Resume("Михаил", "Бекасов", "Юрьевич", "Разраб",
+        var resume = new Resume(Guid.Empty, Guid.Empty,
+            "Михаил", "Бекасов", "Юрьевич", "Разраб",
             "https://github.com/MichaelGallinago", "https://t.me/micsnipe", "Не дам",
-            "88005553535", "Сами с усами", "Немеренно",
+            "88005553535", "Сами с усами", 6,
             ["C#", "Git"], ["Злой", "Негативный"]);
         
-        var parameters = new PdfParameters(148, 210);
+        var parameters = new PdfParameters(
+            148, 210, 100, 100, 4, 4, 4,  4);
         
         await File.WriteAllBytesAsync(path, _resumeGenerator.GeneratePdf(resume, parameters), stoppingToken);
-        */
-        
-        while (!stoppingToken.IsCancellationRequested)
-        {
-            if (_logger.IsEnabled(LogLevel.Information))
-            {
-                _logger.LogInformation("Worker running at: {time}", DateTimeOffset.Now);
-            }
-
-            await Task.Delay(1000, stoppingToken);
-        }
+        _logger.LogInformation(path);
     }
 }

@@ -8,19 +8,13 @@ namespace ResumeGenerator.GeneratorService.Infrastructure.Generating;
 public sealed class ResumeGenerator : IResumeGenerator
 {
     private readonly string _template;
+    private readonly string _style;
 
     public ResumeGenerator(IOptions<ResumeTemplates> options)
     {
-        string a = Directory.GetCurrentDirectory();
-        string templatePath = Path.Combine(
-            AppDomain.CurrentDomain.BaseDirectory, options.Value.TemplateFolderPath, options.Value.PdfTemplateName);
-
-        if (!File.Exists(templatePath))
-        {
-            throw new FileNotFoundException($"HTML template file not found on path:\n{templatePath}");
-        }
-
-        _template = File.ReadAllText(templatePath);
+        string folder = options.Value.TemplateFolderPath;
+        _template = LoadFile(folder, options.Value.PdfTemplateName, "HTML template");
+        _style = LoadFile(folder, options.Value.PdfStyleName, "CSS style");
     }
 
     public byte[] GeneratePdf(in Resume resume, in PdfParameters parameters) => HtmlConverter.FromHtmlString(
@@ -36,7 +30,7 @@ public sealed class ResumeGenerator : IResumeGenerator
         parameters.Encoding
     );
 
-    public string GenerateHtml(in Resume resume) => string.Format(_template, [
+    public string GenerateHtml(in Resume resume) => string.Format(_template, _style,
         resume.FirstName, resume.MiddleName, resume.LastName,
         resume.DesiredPosition,
         resume.GitHubLink,
@@ -44,8 +38,20 @@ public sealed class ResumeGenerator : IResumeGenerator
         resume.Email,
         resume.PhoneNumber,
         resume.Education,
-        resume.Experience,
+        resume.ExperienceYears.ToString(),
         string.Join(", ", resume.HardSkills),
         string.Join(", ", resume.SoftSkills)
-    ]);
+    );
+
+    private static string LoadFile(string folder, string name, string fileTypeName)
+    {
+        string path = Path.Combine(AppDomain.CurrentDomain.BaseDirectory, folder, name);
+
+        if (!File.Exists(path))
+        {
+            throw new FileNotFoundException($"{fileTypeName} file not found on path:\n{path}");
+        }
+
+        return File.ReadAllText(path);
+    }
 }
