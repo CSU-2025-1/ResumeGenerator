@@ -1,9 +1,8 @@
-﻿using Grpc;
-using MassTransit;
+﻿using MassTransit;
 using ResumeGenerator.ApiService.Application.Extensions;
 using ResumeGenerator.ApiService.Application.Mapping;
-using ResumeGenerator.ApiService.Application.Services.Resumes;
 using ResumeGenerator.ApiService.Data.Extentions;
+using ResumeGenerator.ApiService.Grpc;
 using ResumeGenerator.ApiService.Web.Extensions;
 using ResumeGenerator.ApiService.Web.Initializers;
 using ResumeGenerator.ApiService.Web.Middlewares;

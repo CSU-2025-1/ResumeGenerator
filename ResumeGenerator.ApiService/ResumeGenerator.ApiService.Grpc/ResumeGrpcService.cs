@@ -3,7 +3,7 @@ using Grpc.Core;
 using ResumeGenerator.ApiService.Application.Services.Resumes;
 using ResumeGenerator.ApiService.Grpc.grpc;
 
-namespace Grpc;
+namespace ResumeGenerator.ApiService.Grpc;
 
 public sealed class ResumeGrpcService : ResumeServiceGrpc.ResumeServiceGrpcBase
 {
