@@ -13,5 +13,5 @@ public interface IResumeService
 
     Task<Resume> GetResumeByIdAsync(Guid resumeId, CancellationToken ct = default);
 
-    Task<Resume> DeleteResumeByIdAsync(Guid resumeId, CancellationToken ct = default);
+    Task DeleteResumeByIdAsync(Guid resumeId, CancellationToken ct = default);
 }

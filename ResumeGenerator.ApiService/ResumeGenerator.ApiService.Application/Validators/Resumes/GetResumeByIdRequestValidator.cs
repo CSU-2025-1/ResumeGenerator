@@ -8,6 +8,7 @@ public sealed class GetResumeByIdRequestValidator : AbstractValidator<GetResumeB
     public GetResumeByIdRequestValidator()
     {
         RuleFor(request => request.ResumeId)
+            .NotEqual(Guid.Empty)
             .NotEmpty();
     }
 }

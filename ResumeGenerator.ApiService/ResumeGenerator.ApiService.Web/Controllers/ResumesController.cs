@@ -10,39 +10,58 @@ namespace ResumeGenerator.ApiService.Web.Controllers;
 public sealed class ResumesController : ControllerBase
 {
     [HttpGet]
-    public Task<GetResumesByUserIdResponse> GetAllResumesByUserId(
+    [ProducesResponseType(typeof(GetResumesByUserIdResponse), StatusCodes.Status200OK)]
+    public async Task<ActionResult<GetResumesByUserIdResponse>> GetAllResumesByUserId(
         [FromQuery] Guid userId,
         [FromServices] GetAllResumesByUserIdHandler handler,
         CancellationToken ct = default)
-        => handler.Handle(new GetResumesByUserIdRequest
+    {
+        var result = await handler.Handle(new GetResumesByUserIdRequest
         {
             UserId = userId
         }, ct);
 
-    [HttpGet]
-    public Task<GetResumeByIdResponse> GetResumeById(
+        return Ok(result);
+    }
+
+    [HttpGet("{resumeId:guid}")]
+    [ProducesResponseType(typeof(GetResumeByIdResponse), StatusCodes.Status200OK)]
+    public async Task<ActionResult<GetResumeByIdResponse>> GetResumeById(
         [FromQuery] Guid resumeId,
         [FromServices] GetResumeByIdHandler handler,
         CancellationToken ct = default)
-        => handler.Handle(new GetResumeByIdRequest
+    {
+        var result = await handler.Handle(new GetResumeByIdRequest
         {
             ResumeId = resumeId
         }, ct);
 
+        return Ok(result);
+    }
+
     [HttpPost]
-    public Task CreateResume(
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    public async Task<IActionResult> CreateResume(
         [FromBody] CreateResumeRequest request,
         [FromServices] CreateResumeHandler handler,
         CancellationToken ct = default)
-        => handler.Handle(request, ct);
+    {
+        await handler.Handle(request, ct);
+        return Accepted();
+    }
 
-    [HttpDelete]
-    public Task DeleteResumeById(
+    [HttpDelete("{resumeId:guid}")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    public async Task<IActionResult> DeleteResumeById(
         [FromQuery] Guid resumeId,
         [FromServices] DeleteResumeByIdHandler handler,
         CancellationToken ct = default)
-        => handler.Handle(new DeleteResumeByIdRequest
+    {
+        await handler.Handle(new DeleteResumeByIdRequest
         {
             ResumeId = resumeId
         }, ct);
+        
+        return NoContent();
+    }
 }

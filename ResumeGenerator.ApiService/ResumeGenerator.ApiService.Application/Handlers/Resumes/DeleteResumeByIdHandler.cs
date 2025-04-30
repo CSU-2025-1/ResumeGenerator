@@ -26,8 +26,8 @@ public sealed class DeleteResumeByIdHandler
         var validationResult = await _validator.ValidateAsync(request, ct);
         BadRequestException.ThrowByValidationResult(validationResult);
 
-        var resume = await _resumeService.DeleteResumeByIdAsync(request.ResumeId, ct);
+        await _resumeService.DeleteResumeByIdAsync(request.ResumeId, ct);
 
-        _logger.LogInformation("Resume with id:{ResumeId} were successfully deleted.", resume.Id);
+        _logger.LogInformation("Resume with id:{ResumeId} were successfully deleted.", request.ResumeId);
     }
 }

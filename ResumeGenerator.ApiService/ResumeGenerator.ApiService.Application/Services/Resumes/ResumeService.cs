@@ -65,7 +65,7 @@ public sealed class ResumeService : IResumeService
         return resume!;
     }
 
-    public async Task<Resume> DeleteResumeByIdAsync(Guid resumeId, CancellationToken ct = default)
+    public async Task DeleteResumeByIdAsync(Guid resumeId, CancellationToken ct = default)
     {
         var resume = await _context.Resumes
             .FirstOrDefaultAsync(r => r.Id == resumeId, ct);
@@ -74,8 +74,7 @@ public sealed class ResumeService : IResumeService
             new Error(StatusCodes.Status404NotFound.ToString(), $"Resume with id: {resumeId} not found in database."));
 
         _context.Resumes.Remove(resume!);
+        
         await _context.SaveChangesAsync(ct);
-
-        return resume!;
     }
 }

@@ -8,6 +8,7 @@ public sealed class DeleteResumeByIdRequestValidator : AbstractValidator<DeleteR
     public DeleteResumeByIdRequestValidator()
     {
         RuleFor(request => request.ResumeId)
+            .NotEqual(Guid.Empty)
             .NotEmpty();
     }
 }
