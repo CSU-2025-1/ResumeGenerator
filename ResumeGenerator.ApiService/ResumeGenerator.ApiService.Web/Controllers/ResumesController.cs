@@ -19,10 +19,30 @@ public sealed class ResumesController : ControllerBase
             UserId = userId
         }, ct);
 
+    [HttpGet]
+    public Task<GetResumeByIdResponse> GetResumeById(
+        [FromQuery] Guid resumeId,
+        [FromServices] GetResumeByIdHandler handler,
+        CancellationToken ct = default)
+        => handler.Handle(new GetResumeByIdRequest
+        {
+            ResumeId = resumeId
+        }, ct);
+
     [HttpPost]
     public Task CreateResume(
         [FromBody] CreateResumeRequest request,
         [FromServices] CreateResumeHandler handler,
         CancellationToken ct = default)
         => handler.Handle(request, ct);
+
+    [HttpDelete]
+    public Task DeleteResumeById(
+        [FromQuery] Guid resumeId,
+        [FromServices] DeleteResumeByIdHandler handler,
+        CancellationToken ct = default)
+        => handler.Handle(new DeleteResumeByIdRequest
+        {
+            ResumeId = resumeId
+        }, ct);
 }

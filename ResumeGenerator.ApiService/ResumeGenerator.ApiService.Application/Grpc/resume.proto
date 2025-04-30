@@ -1,0 +1,22 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "ResumeGenerator.Common.Contracts.Grpc";
+
+import "google/protobuf/empty.proto"; 
+
+package resume;
+
+enum ResumeStatus {
+  RESUME_MAKING_IN_PROGRESS = 0;
+  RESUME_MAKING_SUCCESS = 1;
+  RESUME_MAKING_FAILED = 2;
+}
+
+message UpdateResumeStatusRequest {
+  string resume_id = 1;
+  ResumeStatus new_status = 2;
+}
+
+service ResumeServiceGrpc {
+  rpc UpdateResumeStatus(UpdateResumeStatusRequest) returns (google.protobuf.Empty);
+}

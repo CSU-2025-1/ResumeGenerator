@@ -15,6 +15,7 @@ public sealed class AppMappingProfile : MappingProfileBase
                 opt => opt.MapFrom(src => string.Join(", ", src.SoftSkills.Select(s => s.SoftSkillName))));
 
         CreateMap<ResumeDto, Resume>()
+            .ForMember(dest => dest.ResumeStatus, opt => opt.Ignore())
             .ForMember(dest => dest.HardSkills, opt => opt.MapFrom(src => src.HardSkills
                 .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
                 .Select(name => new HardSkill { HardSkillName = name }).ToList()))

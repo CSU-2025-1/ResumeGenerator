@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using ResumeGenerator.ApiService.Application.Extensions;
 using ResumeGenerator.ApiService.Application.Mapping;
+using ResumeGenerator.ApiService.Application.Services.Resumes;
 using ResumeGenerator.ApiService.Data.Extentions;
 using ResumeGenerator.ApiService.Web.Extensions;
 using ResumeGenerator.ApiService.Web.Initializers;
@@ -35,6 +36,8 @@ public sealed class Startup
         services.AddAutoMapper(typeof(AppMappingProfile));
         services.AddApplicationServices();
         services.AddHandlers();
+        
+        services.AddGrpc();
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
@@ -74,6 +77,10 @@ public sealed class Startup
         app.UseAuthentication();
         app.UseAuthorization();
 
-        app.UseEndpoints(e => e.MapControllers());
+        app.UseEndpoints(endpoints =>
+        {
+            endpoints.MapControllers();
+            endpoints.MapGrpcService<ResumeGrpcService>();
+        });
     }
 }
