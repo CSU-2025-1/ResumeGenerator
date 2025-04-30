@@ -27,7 +27,7 @@ public sealed class ResumesController : ControllerBase
     [HttpGet("{resumeId:guid}")]
     [ProducesResponseType(typeof(GetResumeByIdResponse), StatusCodes.Status200OK)]
     public async Task<ActionResult<GetResumeByIdResponse>> GetResumeById(
-        [FromQuery] Guid resumeId,
+        [FromRoute] Guid resumeId,
         [FromServices] GetResumeByIdHandler handler,
         CancellationToken ct = default)
     {
@@ -54,7 +54,7 @@ public sealed class ResumesController : ControllerBase
     [HttpDelete("{resumeId:guid}")]
     [ProducesResponseType(StatusCodes.Status204NoContent)]
     public async Task<IActionResult> DeleteResumeById(
-        [FromQuery] Guid resumeId,
+        [FromRoute] Guid resumeId,
         [FromServices] DeleteResumeByIdHandler handler,
         CancellationToken ct = default)
     {
