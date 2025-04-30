@@ -16,7 +16,7 @@ public sealed class Resume
     public string PhoneNumber { get; set; }
     public string Education { get; set; }
     public int ExperienceYears { get; set; }
-    
+
     public ResumeStatus ResumeStatus { get; set; } = ResumeStatus.ResumeMakingInProgress;
     
     public ICollection<HardSkill> HardSkills { get; set; } = [];
