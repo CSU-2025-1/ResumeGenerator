@@ -1,4 +1,6 @@
-﻿namespace ResumeGenerator.ApiService.Application.DTO;
+﻿using ResumeGenerator.ApiService.Data.Entities;
+
+namespace ResumeGenerator.ApiService.Application.DTO;
 
 public sealed record ResumeDto
 {
@@ -16,4 +18,6 @@ public sealed record ResumeDto
     public int ExperienceYears { get; init; }
     public string HardSkills { get; init; }
     public string SoftSkills { get; init; }
+    
+    public ResumeStatus ResumeStatus { get; init; } = ResumeStatus.ResumeMakingInProgress;
 }

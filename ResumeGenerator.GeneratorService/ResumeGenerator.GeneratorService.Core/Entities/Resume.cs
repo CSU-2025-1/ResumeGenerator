@@ -1,6 +1,8 @@
 ﻿namespace ResumeGenerator.GeneratorService.Core.Entities;
 
 public readonly record struct Resume(
+    Guid ResumeId,
+    Guid UserId,
     string FirstName,
     string LastName,
     string MiddleName,
@@ -10,7 +12,7 @@ public readonly record struct Resume(
     string Email,
     string PhoneNumber,
     string Education,
-    string Experience,
+    int ExperienceYears,
     string[] HardSkills,
     string[] SoftSkills
 );

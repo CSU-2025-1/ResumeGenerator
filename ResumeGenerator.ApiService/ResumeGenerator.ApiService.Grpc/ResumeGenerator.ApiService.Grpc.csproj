@@ -1,0 +1,26 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>Grpc</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Google.Protobuf" Version="3.31.0-rc1"/>
+        <PackageReference Include="Grpc.AspNetCore" Version="2.71.0"/>
+        <PackageReference Include="Grpc.Tools" Version="2.71.0">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
+        <Protobuf Include="grpc\resume.proto" GrpcServices="Server">
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ResumeGenerator.ApiService.Application\ResumeGenerator.ApiService.Application.csproj" />
+    </ItemGroup>
+
+</Project>
