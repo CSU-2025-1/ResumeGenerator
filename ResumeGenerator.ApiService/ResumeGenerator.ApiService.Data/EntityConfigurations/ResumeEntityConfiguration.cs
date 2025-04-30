@@ -8,7 +8,7 @@ public sealed class ResumeEntityConfiguration : IEntityTypeConfiguration<Resume>
 {
     public void Configure(EntityTypeBuilder<Resume> builder)
     {
-        builder.ToTable("users");
+        builder.ToTable("resumes");
 
         builder.HasKey(u => u.Id);
 
@@ -24,9 +24,16 @@ public sealed class ResumeEntityConfiguration : IEntityTypeConfiguration<Resume>
         builder.Property(u => u.PhoneNumber).HasColumnName("phone_number");
         builder.Property(u => u.Education).HasColumnName("education");
         builder.Property(u => u.ExperienceYears).HasColumnName("experience_years");
-        builder.Property(u => u.HardSkills).HasColumnName("hard_skills");
-        builder.Property(u => u.SoftSkills).HasColumnName("soft_skills");
+        builder.Property(u => u.ResumeStatus).HasColumnName("resume_status");
+        
+        builder.HasMany(r => r.HardSkills)
+            .WithOne(hs => hs.Resume)
+            .HasForeignKey(hs => hs.ResumeId)
+            .OnDelete(DeleteBehavior.Cascade);
 
-        builder.HasIndex(u => u.UserId).IsUnique();
+        builder.HasMany(r => r.SoftSkills)
+            .WithOne(ss => ss.Resume)
+            .HasForeignKey(ss => ss.ResumeId)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }
