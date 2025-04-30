@@ -14,7 +14,7 @@
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <Protobuf Include="grpc\resume.proto" GrpcServices="Server">
+        <Protobuf Include="protos\resume.proto" GrpcServices="Server">
             <Generator>MSBuild:Compile</Generator>
         </Protobuf>
     </ItemGroup>

@@ -1,7 +1,7 @@
 ﻿using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using ResumeGenerator.ApiService.Application.Services.Resumes;
-using ResumeGenerator.ApiService.Grpc.grpc;
+using ResumeGenerator.ApiService.Grpc.protos;
 
 namespace ResumeGenerator.ApiService.Grpc;
 

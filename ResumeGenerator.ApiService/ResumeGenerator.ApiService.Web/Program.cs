@@ -12,7 +12,11 @@ internal static class Program
                     {
                         options.ListenLocalhost(8080, listenOptions =>
                         {
-                            listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1AndHttp2;
+                            listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
+                        });
+                        options.ListenLocalhost(8000, listenOptions =>
+                        {
+                            listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
                         });
                     })
                     .UseConfiguration(new ConfigurationBuilder()
