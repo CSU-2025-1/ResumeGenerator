@@ -485,3 +485,6 @@ $RECYCLE.BIN/
 
 # Config files
 *.json
+
+# HtmlToPdf2AZ files
+*.local-chromium

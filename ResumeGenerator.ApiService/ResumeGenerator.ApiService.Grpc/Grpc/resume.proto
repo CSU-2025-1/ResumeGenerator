@@ -1,8 +1,8 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 
 option csharp_namespace = "ResumeGenerator.ApiService.Grpc.grpc";
 
-import "google/protobuf/empty.proto"; 
+import "google/protobuf/empty.proto";
 
 package resume;
 
