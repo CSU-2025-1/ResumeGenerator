@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+option csharp_namespace = "ResumeGenerator.TelegramAdapter.Grpc.Generated";
+
+import "google/protobuf/empty.proto";
+
+package telegram_adapter;
+
+service TelegramAdapter {
+  rpc SendResume (SendResumeRequest) returns (google.protobuf.Empty);
+}
+
+message SendResumeRequest {
+  string userID = 1;
+  string resumeID = 2;
+}

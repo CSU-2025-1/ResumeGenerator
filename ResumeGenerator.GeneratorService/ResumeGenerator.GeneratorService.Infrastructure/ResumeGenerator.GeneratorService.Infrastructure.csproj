@@ -8,7 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="HtmlToPdfMaster" Version="1.0.0.4" />
+    <PackageReference Include="HtmlToPdf2AZ" Version="1.0.1" />
     <PackageReference Include="Microsoft.Extensions.Options" Version="9.0.1" />
   </ItemGroup>
 

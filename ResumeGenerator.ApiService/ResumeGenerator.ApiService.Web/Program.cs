@@ -14,7 +14,7 @@ internal static class Program
                         {
                             listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
                         });
-                        options.ListenLocalhost(8000, listenOptions =>
+                        options.ListenLocalhost(8081, listenOptions =>
                         {
                             listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
                         });
