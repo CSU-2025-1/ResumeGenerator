@@ -8,10 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <PackageReference Include="Microsoft.AspNetCore.OpenApi" Version="9.0.3"/>
-    </ItemGroup>
-
-    <ItemGroup>
       <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Core\ResumeGenerator.TelegramAdapter.Core.csproj" />
       <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Grpc\ResumeGenerator.TelegramAdapter.Grpc.csproj" />
       <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Infrastructure\ResumeGenerator.TelegramAdapter.Infrastructure.csproj" />
