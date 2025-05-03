@@ -9,7 +9,8 @@ using ResumeGenerator.TelegramAdapter.Infrastructure.Persistence;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using MinioConfig = Minio.MinioConfig;
+using JsonOptions = Microsoft.AspNetCore.Http.Json.JsonOptions;
+using MinioConfig = ResumeGenerator.TelegramAdapter.Infrastructure.Minio.MinioConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,7 +22,7 @@ builder.WebHost.ConfigureKestrel(options =>
 });
 
 builder.Services.AddGrpc();
-builder.Services.ConfigureTelegramBot<Microsoft.AspNetCore.Http.Json.JsonOptions>(opt => opt.SerializerOptions);
+builder.Services.ConfigureTelegramBot<JsonOptions>(opt => opt.SerializerOptions);
 
 var telegramBotClient = new TelegramBotClient(builder.Configuration["Telegram:BotToken"] ?? string.Empty);
 await telegramBotClient.SetWebhook(

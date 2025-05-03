@@ -2,5 +2,5 @@ namespace ResumeGenerator.TelegramAdapter.Infrastructure.Minio;
 
 public sealed class MinioConfig
 {
-    public required string BucketName { get; set; }
+    public string BucketName { get; init; } = string.Empty;
 }
