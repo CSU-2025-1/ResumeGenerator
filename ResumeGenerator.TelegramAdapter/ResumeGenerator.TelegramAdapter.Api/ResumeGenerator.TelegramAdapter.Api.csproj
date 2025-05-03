@@ -14,6 +14,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Core\ResumeGenerator.TelegramAdapter.Core.csproj" />
       <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Grpc\ResumeGenerator.TelegramAdapter.Grpc.csproj" />
+      <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Infrastructure\ResumeGenerator.TelegramAdapter.Infrastructure.csproj" />
     </ItemGroup>
 
 </Project>

@@ -6,4 +6,14 @@
         <Nullable>enable</Nullable>
     </PropertyGroup>
 
+    <ItemGroup>
+      <PackageReference Include="Dapper" Version="2.1.66" />
+      <PackageReference Include="Minio" Version="6.0.4" />
+      <PackageReference Include="Npgsql" Version="9.0.3" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Core\ResumeGenerator.TelegramAdapter.Core.csproj" />
+    </ItemGroup>
+
 </Project>

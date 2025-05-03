@@ -1,11 +1,15 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
+using Minio;
 using ResumeGenerator.TelegramAdapter.Core.Abstractions;
 using ResumeGenerator.TelegramAdapter.Core.Entities;
 using ResumeGenerator.TelegramAdapter.Grpc.Services;
+using ResumeGenerator.TelegramAdapter.Infrastructure.Minio;
+using ResumeGenerator.TelegramAdapter.Infrastructure.Persistence;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using MinioConfig = Minio.MinioConfig;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,9 +31,26 @@ await telegramBotClient.SetWebhook(
 builder.Services.Add(
     ServiceDescriptor.Describe(
         serviceType: typeof(ITelegramBotClient),
-        implementationType: typeof(TelegramBotClient),
+        implementationFactory: _ => telegramBotClient,
         lifetime: ServiceLifetime.Singleton)
 );
+
+builder.Services.Add(
+    ServiceDescriptor.Describe(
+        serviceType: typeof(DbConnectionFactory),
+        implementationFactory: _ => new DbConnectionFactory(
+            builder.Configuration.GetConnectionString("DefaultConnection")),
+        lifetime: ServiceLifetime.Singleton)
+);
+builder.Services.AddScoped<ITelegramChatRepository, TelegramChatRepository>();
+
+builder.Services.AddMinio(configureClient => configureClient
+    .WithEndpoint(builder.Configuration["Minio:Endpoint"])
+    .WithCredentials(builder.Configuration["Minio:AccessKey"],  builder.Configuration["Minio:SecretKey"])
+    .WithSSL(false)
+    .Build());
+builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("Minio"));
+builder.Services.AddScoped<IResumeRepository, ResumeRepository>();
 
 var app = builder.Build();
 
@@ -42,7 +63,7 @@ app.MapPost("/telegram-adapter/v1/updates", async (
     var result = await telegramChatRepository.SaveChatAsync(new TelegramChat
     {
         ExtId = update.Message!.Chat.Id,
-        UserId = Guid.Empty
+        UserId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6")
     }, ct);
     if (result.IsFailure)
     {
