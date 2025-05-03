@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumeGenerator.TelegramAdapter.Api", "ResumeGenerator.TelegramAdapter.Api\ResumeGenerator.TelegramAdapter.Api.csproj", "{53E31497-6995-4FFE-B08B-B78E1DF4264E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ResumeGenerator.TelegramAdapter.Core", "ResumeGenerator.TelegramAdapter.Core\ResumeGenerator.TelegramAdapter.Core.csproj", "{BA1C8F1C-D8BF-4875-81EA-58D6FD1B781F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{53E31497-6995-4FFE-B08B-B78E1DF4264E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{53E31497-6995-4FFE-B08B-B78E1DF4264E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{53E31497-6995-4FFE-B08B-B78E1DF4264E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{53E31497-6995-4FFE-B08B-B78E1DF4264E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BA1C8F1C-D8BF-4875-81EA-58D6FD1B781F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BA1C8F1C-D8BF-4875-81EA-58D6FD1B781F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BA1C8F1C-D8BF-4875-81EA-58D6FD1B781F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BA1C8F1C-D8BF-4875-81EA-58D6FD1B781F}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
