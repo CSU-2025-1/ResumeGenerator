@@ -27,6 +27,8 @@ public sealed class AppMappingProfile : MappingProfileBase
             .ForMember(dest => dest.HardSkills,
                 opt => opt.MapFrom(src => src.HardSkills.Select(h => h.HardSkillName).ToArray()))
             .ForMember(dest => dest.SoftSkills,
-                opt => opt.MapFrom(src => src.SoftSkills.Select(s => s.SoftSkillName).ToArray()));
+                opt => opt.MapFrom(src => src.SoftSkills.Select(s => s.SoftSkillName).ToArray()))
+            .ForMember(dest => dest.ResumeId,
+                opt => opt.MapFrom(src => src.Id));
     }
 }
