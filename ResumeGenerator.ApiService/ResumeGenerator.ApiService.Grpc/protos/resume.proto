@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "ResumeGenerator.ApiService.Grpc.grpc";
+option csharp_namespace = "ResumeGenerator.ApiService.Grpc.protos";
 
 import "google/protobuf/empty.proto";
 
