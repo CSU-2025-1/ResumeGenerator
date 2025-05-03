@@ -8,12 +8,18 @@
 
     <ItemGroup>
       <PackageReference Include="Dapper" Version="2.1.66" />
+      <PackageReference Include="dbup-postgresql" Version="6.0.3" />
       <PackageReference Include="Minio" Version="6.0.4" />
       <PackageReference Include="Npgsql" Version="9.0.3" />
     </ItemGroup>
 
     <ItemGroup>
       <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Core\ResumeGenerator.TelegramAdapter.Core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Persistence\Migrations\000001__init_tables.sql" />
+      <EmbeddedResource Include="Persistence\Migrations\000001__init_tables.sql" />
     </ItemGroup>
 
 </Project>

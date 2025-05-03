@@ -72,4 +72,7 @@ app.MapPost("/telegram-adapter/v1/updates", async (
     }
 });
 
+var migrator = new Migrator(builder.Configuration.GetConnectionString("DefaultConnection"));
+migrator.Migrate();
+
 app.Run();
