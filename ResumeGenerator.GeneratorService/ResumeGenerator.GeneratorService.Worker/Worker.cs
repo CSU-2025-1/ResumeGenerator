@@ -1,3 +1,4 @@
+using HtmlToPdf2AZ.Models;
 using ResumeGenerator.GeneratorService.Core.Entities;
 using ResumeGenerator.GeneratorService.Core.Interfaces;
 
@@ -23,11 +24,13 @@ public class Worker : BackgroundService
             "https://github.com/MichaelGallinago", "https://t.me/micsnipe", "Не дам",
             "88005553535", "Сами с усами", 6,
             ["C#", "Git"], ["Злой", "Негативный"]);
-        
-        var parameters = new PdfParameters(
-            148, 210, 100, 100, 4, 4, 4,  4);
-        
-        await File.WriteAllBytesAsync(path, _resumeGenerator.GeneratePdf(resume, parameters), stoppingToken);
+
+        var marginOptions = new MarginOptions("0.15in");
+
+        await using FileStream output = File.Create(path);
+        Stream stream = await _resumeGenerator.GeneratePdf(resume, marginOptions, PaperFormat.A4);
+        await stream.CopyToAsync(output, stoppingToken);
+
         _logger.LogInformation(path);
     }
 }

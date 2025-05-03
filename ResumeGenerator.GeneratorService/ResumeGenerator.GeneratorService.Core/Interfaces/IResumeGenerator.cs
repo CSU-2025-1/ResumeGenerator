@@ -1,9 +1,10 @@
-﻿using ResumeGenerator.GeneratorService.Core.Entities;
+﻿using HtmlToPdf2AZ.Models;
+using ResumeGenerator.GeneratorService.Core.Entities;
 
 namespace ResumeGenerator.GeneratorService.Core.Interfaces;
 
 public interface IResumeGenerator
 {
-    byte[] GeneratePdf(in Resume resume, in PdfParameters parameters);
+    Task<Stream> GeneratePdf(in Resume resume, MarginOptions marginOptions, PaperFormat paperFormat);
     string GenerateHtml(in Resume resume);
 }

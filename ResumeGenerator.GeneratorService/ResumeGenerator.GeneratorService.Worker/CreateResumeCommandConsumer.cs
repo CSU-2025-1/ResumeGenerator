@@ -1,4 +1,5 @@
 using System.Net.Mime;
+using HtmlToPdf2AZ.Models;
 using MassTransit;
 using Minio;
 using Minio.DataModel.Args;
@@ -10,8 +11,8 @@ namespace ResumeGenerator.GeneratorService.Worker;
 
 public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
 {
-    private static readonly PdfParameters Parameters =
-        new(148, 210, 100, 100, 4, 4, 4, 4);
+    private static readonly MarginOptions MarginOptions = new("0.15in");
+    private static readonly PaperFormat PaperFormat = PaperFormat.A4;
 
     private static readonly BucketExistsArgs ExistsArgs = new BucketExistsArgs().WithBucket(BucketName);
     private static readonly MakeBucketArgs MakeArgs = new MakeBucketArgs().WithBucket(BucketName);
@@ -38,7 +39,7 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
             await _minioClient.MakeBucketAsync(MakeArgs, context.CancellationToken);
         }
 
-        using var memoryStream = new MemoryStream(GeneratePdf(command));
+        await using Stream memoryStream = await GeneratePdf(command);
 
         await _minioClient.PutObjectAsync(new PutObjectArgs()
                 .WithBucket(BucketName)
@@ -49,7 +50,7 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
             context.CancellationToken);
     }
 
-    private byte[] GeneratePdf(CreateResumeCommand command) => _resumeGenerator.GeneratePdf(new Resume
+    private Task<Stream> GeneratePdf(CreateResumeCommand command) => _resumeGenerator.GeneratePdf(new Resume
     {
         ResumeId = command.ResumeId,
         UserId = command.UserId,
@@ -65,5 +66,5 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
         ExperienceYears = command.ExperienceYears,
         HardSkills = command.HardSkills,
         SoftSkills = command.SoftSkills,
-    }, Parameters);
+    }, MarginOptions, PaperFormat);
 }

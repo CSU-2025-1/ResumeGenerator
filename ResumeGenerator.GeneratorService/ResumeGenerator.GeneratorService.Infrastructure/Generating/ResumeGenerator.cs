@@ -1,4 +1,5 @@
-﻿using HtmlToPdfMaster;
+﻿using HtmlToPdf2AZ;
+using HtmlToPdf2AZ.Models;
 using Microsoft.Extensions.Options;
 using ResumeGenerator.GeneratorService.Core.Entities;
 using ResumeGenerator.GeneratorService.Core.Interfaces;
@@ -7,6 +8,8 @@ namespace ResumeGenerator.GeneratorService.Infrastructure.Generating;
 
 public sealed class ResumeGenerator : IResumeGenerator
 {
+    private static readonly PdfTools PdfTools = new();
+
     private readonly string _template;
     private readonly string _style;
 
@@ -17,18 +20,11 @@ public sealed class ResumeGenerator : IResumeGenerator
         _style = LoadFile(folder, options.Value.PdfStyleName, "CSS style");
     }
 
-    public byte[] GeneratePdf(in Resume resume, in PdfParameters parameters) => HtmlConverter.FromHtmlString(
-        GenerateHtml(resume),
-        parameters.Width,
-        parameters.Height,
-        parameters.Quality,
-        parameters.Dpi,
-        parameters.MarginLeft,
-        parameters.MarginTop,
-        parameters.MarginRight,
-        parameters.MarginBottom,
-        parameters.Encoding
-    );
+    public Task<Stream> GeneratePdf(
+        in Resume resume, MarginOptions marginOptions, PaperFormat paperFormat) => PdfTools.GetPDFFromHTML(
+            htmlContent: GenerateHtml(resume),
+            marginOptions: marginOptions,
+            paperFormat: paperFormat);
 
     public string GenerateHtml(in Resume resume) => string.Format(_template, _style,
         resume.FirstName, resume.MiddleName, resume.LastName,
