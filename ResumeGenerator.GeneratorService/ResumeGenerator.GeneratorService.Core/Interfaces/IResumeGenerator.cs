@@ -5,6 +5,8 @@ namespace ResumeGenerator.GeneratorService.Core.Interfaces;
 
 public interface IResumeGenerator
 {
-    Task<Stream> GeneratePdf(in Resume resume, MarginOptions marginOptions, PaperFormat paperFormat);
+    Task<Stream> GeneratePdfAsync(
+        in Resume resume, MarginOptions marginOptions, PaperFormat paperFormat, CancellationToken ct = default);
+
     string GenerateHtml(in Resume resume);
 }

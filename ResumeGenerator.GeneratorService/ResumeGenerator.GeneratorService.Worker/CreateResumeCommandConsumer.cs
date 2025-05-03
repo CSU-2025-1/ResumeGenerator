@@ -50,7 +50,7 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
             context.CancellationToken);
     }
 
-    private Task<Stream> GeneratePdf(CreateResumeCommand command) => _resumeGenerator.GeneratePdf(new Resume
+    private Task<Stream> GeneratePdf(CreateResumeCommand command) => _resumeGenerator.GeneratePdfAsync(new Resume
     {
         ResumeId = command.ResumeId,
         UserId = command.UserId,

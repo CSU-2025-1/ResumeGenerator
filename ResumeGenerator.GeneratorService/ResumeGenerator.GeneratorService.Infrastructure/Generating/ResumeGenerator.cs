@@ -20,11 +20,12 @@ public sealed class ResumeGenerator : IResumeGenerator
         _style = LoadFile(folder, options.Value.PdfStyleName, "CSS style");
     }
 
-    public Task<Stream> GeneratePdf(
-        in Resume resume, MarginOptions marginOptions, PaperFormat paperFormat) => PdfTools.GetPDFFromHTML(
-            htmlContent: GenerateHtml(resume),
-            marginOptions: marginOptions,
-            paperFormat: paperFormat);
+    public Task<Stream> GeneratePdfAsync(
+        in Resume resume, MarginOptions marginOptions, PaperFormat paperFormat, CancellationToken ct = default) =>
+            PdfTools.GetPDFFromHTML(
+                htmlContent: GenerateHtml(resume),
+                marginOptions: marginOptions,
+                paperFormat: paperFormat);
 
     public string GenerateHtml(in Resume resume) => string.Format(_template, _style,
         resume.FirstName, resume.MiddleName, resume.LastName,
