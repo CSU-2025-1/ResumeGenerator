@@ -2,6 +2,7 @@ using MassTransit;
 using Minio;
 using ResumeGenerator.GeneratorService.Core.Entities;
 using ResumeGenerator.GeneratorService.Core.Interfaces;
+using ResumeGenerator.GeneratorService.Grpc.Generated;
 
 namespace ResumeGenerator.GeneratorService.Worker;
 
@@ -43,11 +44,23 @@ public static class Program
         });
 
         ConfigurationManager configuration = builder.Configuration;
+
         builder.Services.AddMinio(configureClient => configureClient
             .WithEndpoint(configuration["MINIO_ENDPOINT"])
             .WithCredentials(configuration["MINIO_ACCESS_KEY"], configuration["MINIO_SECRET_KEY"])
             .WithSSL(false) // true for https
             .Build());
+
+        var grpcAddress = new Uri(configuration["GRPC_ENDPOINT"] ?? string.Empty);
+        builder.Services.AddGrpcClient<TelegramAdapter.TelegramAdapterClient>(o =>
+        {
+            o.Address = grpcAddress;
+        });
+
+        builder.Services.AddGrpcClient<ResumeServiceGrpc.ResumeServiceGrpcClient>(o =>
+        {
+            o.Address = grpcAddress;
+        });
 
         IHost host = builder.Build();
         host.Run();

@@ -28,7 +28,7 @@ public class Worker : BackgroundService
         var marginOptions = new MarginOptions("0.15in");
 
         await using FileStream output = File.Create(path);
-        Stream stream = await _resumeGenerator.GeneratePdfAsync(resume, marginOptions, PaperFormat.A4);
+        Stream stream = await _resumeGenerator.GeneratePdfAsync(resume, marginOptions, PaperFormat.A4, stoppingToken);
         await stream.CopyToAsync(output, stoppingToken);
 
         _logger.LogInformation(path);

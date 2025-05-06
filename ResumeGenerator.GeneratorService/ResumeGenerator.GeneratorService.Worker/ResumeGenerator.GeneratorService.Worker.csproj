@@ -18,6 +18,7 @@
     <ItemGroup>
         <ProjectReference Include="..\..\ResumeGenerator.Common\ResumeGenerator.Common.csproj" />
         <ProjectReference Include="..\ResumeGenerator.GeneratorService.Core\ResumeGenerator.GeneratorService.Core.csproj" />
+        <ProjectReference Include="..\ResumeGenerator.GeneratorService.Grpc\ResumeGenerator.GeneratorService.Grpc.csproj" />
         <ProjectReference Include="..\ResumeGenerator.GeneratorService.Infrastructure\ResumeGenerator.GeneratorService.Infrastructure.csproj" />
     </ItemGroup>
 
