@@ -58,6 +58,12 @@ public sealed class Startup
             });
         });
 
+        services.AddStackExchangeRedisCache(options =>
+        {
+            options.Configuration = _configuration["Redis:Configuration"];
+            options.InstanceName = _configuration["Redis:InstanceName"];
+        });
+
         services.AddSingleton<ErrorHandlingMiddleware>();
         services.AddAsyncInitializer<MigrationAsyncInitializer>();
     }

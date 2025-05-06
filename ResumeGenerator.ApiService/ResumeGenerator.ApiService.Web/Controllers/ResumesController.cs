@@ -2,6 +2,7 @@
 using ResumeGenerator.ApiService.Application.DTO.Requests.Resumes;
 using ResumeGenerator.ApiService.Application.DTO.Responses.Resumes;
 using ResumeGenerator.ApiService.Application.Handlers.Resumes;
+using ResumeGenerator.ApiService.Web.Attributes;
 
 namespace ResumeGenerator.ApiService.Web.Controllers;
 
@@ -40,6 +41,7 @@ public sealed class ResumesController : ControllerBase
     }
 
     [HttpPost]
+    [Idempotent]
     [ProducesResponseType(StatusCodes.Status202Accepted)]
     public async Task<IActionResult> CreateResume(
         [FromBody] CreateResumeRequest request,
