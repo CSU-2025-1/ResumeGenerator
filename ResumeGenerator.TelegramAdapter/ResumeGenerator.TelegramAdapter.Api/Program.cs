@@ -1,8 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using Minio;
+using ResumeGenerator.TelegramAdapter.Core;
 using ResumeGenerator.TelegramAdapter.Core.Abstractions;
-using ResumeGenerator.TelegramAdapter.Core.Entities;
 using ResumeGenerator.TelegramAdapter.Grpc.Services;
 using ResumeGenerator.TelegramAdapter.Infrastructure.Minio;
 using ResumeGenerator.TelegramAdapter.Infrastructure.Persistence;
@@ -47,7 +47,7 @@ builder.Services.AddScoped<ITelegramChatRepository, TelegramChatRepository>();
 
 builder.Services.AddMinio(configureClient => configureClient
     .WithEndpoint(builder.Configuration["Minio:Endpoint"])
-    .WithCredentials(builder.Configuration["Minio:AccessKey"],  builder.Configuration["Minio:SecretKey"])
+    .WithCredentials(builder.Configuration["Minio:AccessKey"], builder.Configuration["Minio:SecretKey"])
     .WithSSL(false)
     .Build());
 builder.Services.Configure<MinioConfig>(builder.Configuration.GetSection("Minio"));
@@ -56,21 +56,10 @@ builder.Services.AddScoped<IResumeRepository, ResumeRepository>();
 var app = builder.Build();
 
 app.MapGrpcService<TelegramAdapterService>();
-app.MapPost("/telegram-adapter/v1/updates", async (
+app.MapPost("/telegram-adapter/v1/updates", (
     [FromBody] Update update,
-    [FromServices] ITelegramChatRepository telegramChatRepository,
-    CancellationToken ct) =>
-{
-    var result = await telegramChatRepository.SaveChatAsync(new TelegramChat
-    {
-        ExtId = update.Message!.Chat.Id,
-        UserId = Guid.Parse("3fa85f64-5717-4562-b3fc-2c963f66afa6")
-    }, ct);
-    if (result.IsFailure)
-    {
-        Console.WriteLine(result.Error);
-    }
-});
+    [FromServices] UpdateDispatcher updateDispatcher,
+    CancellationToken ct) => updateDispatcher.DispatchAsync(update, ct));
 
 var migrator = new Migrator(builder.Configuration.GetConnectionString("DefaultConnection"));
 migrator.Migrate();
