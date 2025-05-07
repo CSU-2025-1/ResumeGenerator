@@ -18,7 +18,8 @@ public sealed class Resume
     public int ExperienceYears { get; set; }
 
     public ResumeStatus ResumeStatus { get; set; } = ResumeStatus.ResumeMakingInProgress;
-    
+    public int RetryCount { get; set; }
+
     public ICollection<HardSkill> HardSkills { get; set; } = [];
     public ICollection<SoftSkill> SoftSkills { get; set; } = [];
 }

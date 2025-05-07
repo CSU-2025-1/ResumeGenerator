@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using ResumeGenerator.ApiService.Application.Extensions;
 using ResumeGenerator.ApiService.Application.Mapping;
+using ResumeGenerator.ApiService.Application.Services.Resumes;
 using ResumeGenerator.ApiService.Data.Extentions;
 using ResumeGenerator.ApiService.Grpc;
 using ResumeGenerator.ApiService.Web.Extensions;
@@ -38,6 +39,8 @@ public sealed class Startup
         services.AddHandlers();
         
         services.AddGrpc();
+        
+        services.AddHostedService<RetryFailedResumesJob>();
 
         Log.Logger = new LoggerConfiguration()
             .WriteTo.Console()
