@@ -28,8 +28,8 @@ public class RetryFailedResumesJob : BackgroundService
 
     protected override async Task ExecuteAsync(CancellationToken ct)
     {
-        var timer = new PeriodicTimer(TimeSpan.FromHours(6));
-        
+        using var timer = new PeriodicTimer(TimeSpan.FromHours(6));
+
         try
         {
             while (await timer.WaitForNextTickAsync(ct))
@@ -60,11 +60,10 @@ public class RetryFailedResumesJob : BackgroundService
             if (resume.RetryCount >= 5)
             {
                 dbContext.Resumes.Remove(resume);
+                // TODO - дергать grpc ручку для отправки сообщения об этом пользователю в ТГ
                 _logger.LogInformation("Resume with id = {Id} delted after 5 retries", resume.Id);
                 continue;
             }
-
-            resume.ResumeStatus = ResumeStatus.ResumeMakingInProgress;
 
             await bus.Publish(_mapper.Map<CreateResumeCommand>(resume), ct);
 
