@@ -45,42 +45,42 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
 
         try
         {
-            await UpdateResumeStatusAsync(command, ResumeStatus.ResumeMakingInProgress);
-            await GenerateResumeToMinioAsync(context, command);
-            await UpdateResumeStatusAsync(command, ResumeStatus.ResumeMakingSuccess);
-            await SendResumeAsync(command);
+            await UpdateResumeStatusAsync(command, ResumeStatus.ResumeMakingInProgress, context.CancellationToken);
+            await GenerateResumeToMinioAsync(command, context.CancellationToken);
+            await UpdateResumeStatusAsync(command, ResumeStatus.ResumeMakingSuccess, context.CancellationToken);
+            await SendResumeAsync(command, context.CancellationToken);
         }
         catch (Exception)
         {
-            await UpdateResumeStatusAsync(command, ResumeStatus.ResumeMakingFailed);
+            await UpdateResumeStatusAsync(command, ResumeStatus.ResumeMakingFailed, context.CancellationToken);
         }
     }
 
-    private Task<Empty> UpdateResumeStatusAsync(CreateResumeCommand command, ResumeStatus status) =>
-        _apiClient.UpdateResumeStatusAsync(new UpdateResumeStatusRequest
-        {
-            ResumeId = command.ResumeId.ToString(),
-            NewStatus = status
-        }).ResponseAsync;
+    private Task<Empty> UpdateResumeStatusAsync(
+        CreateResumeCommand command, ResumeStatus status, CancellationToken ct = default) =>
+            _apiClient.UpdateResumeStatusAsync(new UpdateResumeStatusRequest
+            {
+                ResumeId = command.ResumeId.ToString(),
+                NewStatus = status
+            }, cancellationToken: ct).ResponseAsync;
 
-    private Task<Empty> SendResumeAsync(CreateResumeCommand command) =>
+    private Task<Empty> SendResumeAsync(CreateResumeCommand command, CancellationToken ct = default) =>
         _telegramClient.SendResumeAsync(new SendResumeRequest
         {
             ResumeID = command.ResumeId.ToString(),
             UserID = command.UserId.ToString()
-        }).ResponseAsync;
+        }, cancellationToken: ct).ResponseAsync;
 
-    private async Task GenerateResumeToMinioAsync(
-        ConsumeContext<CreateResumeCommand> context, CreateResumeCommand command)
+    private async Task GenerateResumeToMinioAsync(CreateResumeCommand command, CancellationToken ct = default)
     {
-        bool exists = await _minioClient.BucketExistsAsync(ExistsArgs, context.CancellationToken);
+        bool exists = await _minioClient.BucketExistsAsync(ExistsArgs, ct);
 
         if (!exists)
         {
-            await _minioClient.MakeBucketAsync(MakeArgs, context.CancellationToken);
+            await _minioClient.MakeBucketAsync(MakeArgs, ct);
         }
 
-        await using Stream memoryStream = await GeneratePdfAsync(command);
+        await using Stream memoryStream = await GeneratePdfAsync(command, ct);
 
         await _minioClient.PutObjectAsync(new PutObjectArgs()
                 .WithBucket(BucketName)
@@ -88,24 +88,25 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
                 .WithStreamData(memoryStream)
                 .WithObjectSize(memoryStream.Length)
                 .WithContentType(MediaTypeNames.Application.Pdf),
-            context.CancellationToken);
+            ct);
     }
 
-    private Task<Stream> GeneratePdfAsync(CreateResumeCommand command) => _resumeGenerator.GeneratePdfAsync(new Resume
-    {
-        ResumeId = command.ResumeId,
-        UserId = command.UserId,
-        FirstName = command.FirstName,
-        LastName = command.LastName,
-        MiddleName = command.MiddleName,
-        DesiredPosition = command.DesiredPosition,
-        GitHubLink = command.GitHubLink,
-        TelegramLink = command.TelegramLink,
-        Email = command.Email,
-        PhoneNumber = command.PhoneNumber,
-        Education = command.Education,
-        ExperienceYears = command.ExperienceYears,
-        HardSkills = command.HardSkills,
-        SoftSkills = command.SoftSkills,
-    }, MarginOptions, PaperFormat);
+    private Task<Stream> GeneratePdfAsync(CreateResumeCommand command, CancellationToken ct = default) =>
+        _resumeGenerator.GeneratePdfAsync(new Resume
+        {
+            ResumeId = command.ResumeId,
+            UserId = command.UserId,
+            FirstName = command.FirstName,
+            LastName = command.LastName,
+            MiddleName = command.MiddleName,
+            DesiredPosition = command.DesiredPosition,
+            GitHubLink = command.GitHubLink,
+            TelegramLink = command.TelegramLink,
+            Email = command.Email,
+            PhoneNumber = command.PhoneNumber,
+            Education = command.Education,
+            ExperienceYears = command.ExperienceYears,
+            HardSkills = command.HardSkills,
+            SoftSkills = command.SoftSkills,
+        }, MarginOptions, PaperFormat, ct);
 }

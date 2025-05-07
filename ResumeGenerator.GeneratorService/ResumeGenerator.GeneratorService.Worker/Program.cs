@@ -51,15 +51,14 @@ public static class Program
             .WithSSL(false) // true for https
             .Build());
 
-        var grpcAddress = new Uri(configuration["GRPC_ENDPOINT"] ?? string.Empty);
         builder.Services.AddGrpcClient<TelegramAdapter.TelegramAdapterClient>(o =>
         {
-            o.Address = grpcAddress;
+            o.Address = new Uri(configuration["TELEGRAM_GRPC_ENDPOINT"] ?? string.Empty);
         });
 
         builder.Services.AddGrpcClient<ResumeServiceGrpc.ResumeServiceGrpcClient>(o =>
         {
-            o.Address = grpcAddress;
+            o.Address = new Uri(configuration["API_GRPC_ENDPOINT"] ?? string.Empty);
         });
 
         IHost host = builder.Build();

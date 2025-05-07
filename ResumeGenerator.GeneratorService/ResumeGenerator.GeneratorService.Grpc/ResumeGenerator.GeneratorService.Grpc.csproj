@@ -17,10 +17,10 @@
     </ItemGroup>
 
     <ItemGroup>
-      <Protobuf Include="Protos\resume_service.proto">
+      <Protobuf Include="Protos\resume_service.proto" GrpsServices="Client">
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
-      <Protobuf Include="Protos\telegram_adapter.proto">
+      <Protobuf Include="Protos\telegram_adapter.proto" GrpsServices="Client">
         <Generator>MSBuild:Compile</Generator>
       </Protobuf>
     </ItemGroup>
