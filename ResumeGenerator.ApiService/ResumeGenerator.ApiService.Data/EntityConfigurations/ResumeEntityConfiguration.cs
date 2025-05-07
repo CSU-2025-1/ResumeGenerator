@@ -25,6 +25,7 @@ public sealed class ResumeEntityConfiguration : IEntityTypeConfiguration<Resume>
         builder.Property(u => u.Education).HasColumnName("education");
         builder.Property(u => u.ExperienceYears).HasColumnName("experience_years");
         builder.Property(u => u.ResumeStatus).HasColumnName("resume_status");
+        builder.Property(r => r.RetryCount).HasColumnName("retry_count");
         
         builder.HasMany(r => r.HardSkills)
             .WithOne(hs => hs.Resume)
