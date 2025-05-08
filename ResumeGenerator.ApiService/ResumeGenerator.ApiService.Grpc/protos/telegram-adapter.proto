@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "ResumeGenerator.ApiService.Grpc.protos";
+
+import "google/protobuf/empty.proto";
+
+package telegram_adapter;
+
+service TelegramAdapter {
+  rpc SendResumeFailedMessage (SendResumeFailedMessageRequest) returns (google.protobuf.Empty);
+}
+
+message SendResumeFailedMessageRequest {
+  string userID = 1;
+}

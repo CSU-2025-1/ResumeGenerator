@@ -1,9 +1,10 @@
 ﻿using MassTransit;
 using ResumeGenerator.ApiService.Application.Extensions;
 using ResumeGenerator.ApiService.Application.Mapping;
-using ResumeGenerator.ApiService.Application.Services.Resumes;
 using ResumeGenerator.ApiService.Data.Extentions;
 using ResumeGenerator.ApiService.Grpc;
+using ResumeGenerator.ApiService.Grpc.protos;
+using ResumeGenerator.ApiService.Jobs;
 using ResumeGenerator.ApiService.Web.Extensions;
 using ResumeGenerator.ApiService.Web.Initializers;
 using ResumeGenerator.ApiService.Web.Middlewares;
@@ -37,9 +38,14 @@ public sealed class Startup
         services.AddAutoMapper(typeof(AppMappingProfile));
         services.AddApplicationServices();
         services.AddHandlers();
-        
+
         services.AddGrpc();
-        
+
+        services.AddGrpcClient<TelegramAdapter.TelegramAdapterClient>(o =>
+        {
+            o.Address = new Uri(_configuration["TgBotHost:TgBotPort"] ?? string.Empty);
+        });
+
         services.AddHostedService<RetryFailedResumesJob>();
 
         Log.Logger = new LoggerConfiguration()

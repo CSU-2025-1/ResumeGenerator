@@ -17,10 +17,13 @@
         <Protobuf Include="protos\resume.proto" GrpcServices="Server">
             <Generator>MSBuild:Compile</Generator>
         </Protobuf>
+        <Protobuf Include="protos\telegram-adapter.proto" GrpcServices="Client">
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ResumeGenerator.ApiService.Application\ResumeGenerator.ApiService.Application.csproj" />
+        <ProjectReference Include="..\ResumeGenerator.ApiService.Application\ResumeGenerator.ApiService.Application.csproj"/>
     </ItemGroup>
 
 </Project>

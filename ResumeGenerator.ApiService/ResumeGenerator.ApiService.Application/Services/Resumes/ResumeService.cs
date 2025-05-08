@@ -1,7 +1,5 @@
-﻿using System.Runtime.InteropServices.JavaScript;
-using AutoMapper;
+﻿using AutoMapper;
 using MassTransit;
-using MassTransit.Internals;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using ResumeGenerator.ApiService.Application.DTO;
