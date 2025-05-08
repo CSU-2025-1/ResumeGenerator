@@ -14,8 +14,8 @@ public sealed class TelegramAdapterService : Generated.TelegramAdapter.TelegramA
     private readonly ITelegramBotClient _telegramBotClient;
 
     public TelegramAdapterService(
-        ITelegramChatRepository telegramChatRepository, 
-        IResumeRepository resumeRepository, 
+        ITelegramChatRepository telegramChatRepository,
+        IResumeRepository resumeRepository,
         ITelegramBotClient telegramBotClient)
     {
         _telegramChatRepository = telegramChatRepository;
@@ -28,7 +28,7 @@ public sealed class TelegramAdapterService : Generated.TelegramAdapter.TelegramA
         var userId = ParseGuid(request.UserID, nameof(request.UserID));
         var resumeId = ParseGuid(request.ResumeID, nameof(request.ResumeID));
 
-        var chat = await _telegramChatRepository.GetByUserIdAsync(userId, ct: context.CancellationToken);
+        var chat = await _telegramChatRepository.GetByUserIdAsync(userId, context.CancellationToken);
         if (chat.HasNoValue)
         {
             throw new RpcException(new Status(StatusCode.NotFound, "Telegram chat for that user wasn't found"));
@@ -43,6 +43,27 @@ public sealed class TelegramAdapterService : Generated.TelegramAdapter.TelegramA
         await _telegramBotClient.SendDocument(
             chatId: chat.Value.ExtId,
             document: InputFile.FromStream(resumeMs.Value),
+            cancellationToken: context.CancellationToken);
+
+        return new Empty();
+    }
+
+    public override async Task<Empty> SendResumeFailedMessage(
+        SendResumeFailedMessageRequest request,
+        ServerCallContext context)
+    {
+        var userId = ParseGuid(request.UserID, nameof(request.UserID));
+
+        var chat = await _telegramChatRepository.GetByUserIdAsync(userId, context.CancellationToken);
+        if (chat.HasNoValue)
+        {
+            throw new RpcException(new Status(StatusCode.NotFound, "Telegram chat for that user wasn't found"));
+        }
+
+        await _telegramBotClient.SendMessage(
+            chatId: chat.Value.ExtId,
+            text: "Нам не удалось сгенерировать одно из резюме, которые вы отправляли. Пожалуйста, повторите попытку," +
+                  " либо же свяжитесь с поддержкой",
             cancellationToken: context.CancellationToken);
 
         return new Empty();

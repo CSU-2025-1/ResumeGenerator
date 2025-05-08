@@ -8,9 +8,14 @@ package telegram_adapter;
 
 service TelegramAdapter {
   rpc SendResume (SendResumeRequest) returns (google.protobuf.Empty);
+  rpc SendResumeFailedMessage (SendResumeFailedMessageRequest) returns (google.protobuf.Empty);
 }
 
 message SendResumeRequest {
   string userID = 1;
   string resumeID = 2;
+}
+
+message SendResumeFailedMessageRequest {
+  string userID = 1;
 }
