@@ -43,7 +43,7 @@ public sealed class Startup
 
         services.AddGrpcClient<TelegramAdapter.TelegramAdapterClient>(o =>
         {
-            o.Address = new Uri(_configuration["TgBotHost:TgBotPort"] ?? string.Empty);
+            o.Address = new Uri(_configuration["TgBot"] ?? string.Empty);
         });
 
         services.AddHostedService<RetryFailedResumesJob>();
