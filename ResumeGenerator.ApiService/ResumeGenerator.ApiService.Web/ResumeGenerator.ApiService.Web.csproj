@@ -23,6 +23,7 @@
     <ItemGroup>
       <ProjectReference Include="..\ResumeGenerator.ApiService.Application\ResumeGenerator.ApiService.Application.csproj" />
       <ProjectReference Include="..\ResumeGenerator.ApiService.Grpc\ResumeGenerator.ApiService.Grpc.csproj" />
+      <ProjectReference Include="..\ResumeGenerator.ApiService.Jobs\ResumeGenerator.ApiService.Jobs.csproj" />
     </ItemGroup>
 
     <ItemGroup>

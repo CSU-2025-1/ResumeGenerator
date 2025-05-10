@@ -1,22 +1,21 @@
-﻿using AutoMapper;
+using AutoMapper;
 using MassTransit;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using ResumeGenerator.ApiService.Data.Context;
-using ResumeGenerator.ApiService.Data.Entities;
+using ResumeGenerator.ApiService.Grpc.protos;
 using ResumeGenerator.Common.Contracts;
+using ResumeStatus = ResumeGenerator.ApiService.Data.Entities.ResumeStatus;
 
-namespace ResumeGenerator.ApiService.Application.Services.Resumes;
+namespace ResumeGenerator.ApiService.Jobs;
 
 public class RetryFailedResumesJob : BackgroundService
 {
     private readonly IServiceProvider _serviceProvider;
     private readonly IMapper _mapper;
     private readonly ILogger<RetryFailedResumesJob> _logger;
-
-    private static readonly TimeSpan RunInterval = TimeSpan.FromHours(6);
 
     public RetryFailedResumesJob(IServiceProvider serviceProvider, IMapper mapper,
         ILogger<RetryFailedResumesJob> logger)
@@ -60,7 +59,13 @@ public class RetryFailedResumesJob : BackgroundService
             if (resume.RetryCount >= 5)
             {
                 dbContext.Resumes.Remove(resume);
-                // TODO - дергать grpc ручку для отправки сообщения об этом пользователю в ТГ
+                var telegramClient = scope.ServiceProvider.GetRequiredService<TelegramAdapter.TelegramAdapterClient>();
+
+                await telegramClient.SendResumeFailedMessageAsync(new SendResumeFailedMessageRequest
+                {
+                    UserID = resume.UserId.ToString()
+                }, cancellationToken: ct);
+
                 _logger.LogInformation("Resume with id = {Id} delted after 5 retries", resume.Id);
                 continue;
             }
