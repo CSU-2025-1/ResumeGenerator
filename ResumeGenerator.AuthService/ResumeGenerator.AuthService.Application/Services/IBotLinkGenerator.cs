@@ -2,5 +2,5 @@
 
 public interface IBotLinkGenerator
 {
-    string GenerateLink(string code);
+    string GenerateLink(string guidUserId);
 }

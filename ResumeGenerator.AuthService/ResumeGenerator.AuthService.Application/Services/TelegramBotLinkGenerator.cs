@@ -1,19 +1,20 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Options;
+using ResumeGenerator.AuthService.Application.Configuration;
 
 namespace ResumeGenerator.AuthService.Application.Services;
 
-public class TelegramBotLinkGenerator : IBotLinkGenerator
+public sealed class TelegramBotLinkGenerator : IBotLinkGenerator
 {
-    private readonly IConfiguration _configuration;
+    private readonly TelegramBotOptions _options;
 
-    public TelegramBotLinkGenerator(IConfiguration configuration)
+    public TelegramBotLinkGenerator(IOptions<TelegramBotOptions> options)
     {
-        _configuration = configuration;
+        _options = options.Value;
     }
 
-    public string GenerateLink(string code)
+    public string GenerateLink(string guidUserId)
     {
-        var botUsername = _configuration["TelegramBot:Username"];
-        return $"https://t.me/{botUsername}?start={code}";
+        return _options.DeepLinkTemplate
+            ?? $"https://t.me/{_options.Username}?start={guidUserId}";
     }
 }

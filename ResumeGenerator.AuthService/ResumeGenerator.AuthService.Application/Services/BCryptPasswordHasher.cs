@@ -1,6 +1,6 @@
 ﻿namespace ResumeGenerator.AuthService.Application.Services;
 
-public class BCryptPasswordHasher : IPasswordHasher
+public sealed class BCryptPasswordHasher : IPasswordHasher
 {
     public string HashPassword(string password)
     {

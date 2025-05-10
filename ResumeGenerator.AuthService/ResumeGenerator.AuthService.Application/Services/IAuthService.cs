@@ -5,6 +5,6 @@ namespace ResumeGenerator.AuthService.Application.Services;
 
 public interface IAuthService
 {
-    Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest request);
-    Task<LoginUserResponse> LoginUserAsync(LoginUserRequest request);
+    RegisterUserResponse RegisterUser(RegisterUserRequest request);
+    LoginUserResponse LoginUser(LoginUserRequest request);
 }

@@ -1,6 +1,6 @@
 ﻿namespace ResumeGenerator.AuthService.Application.DTO.Requests;
 
-public record LoginUserRequest(
+public sealed record LoginUserRequest(
     string Username,
     string Password
 );

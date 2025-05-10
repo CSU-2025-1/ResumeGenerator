@@ -1,5 +1,7 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using ResumeGenerator.AuthService.Application.Configuration;
+using ResumeGenerator.AuthService.Application.Exceptions;
 using ResumeGenerator.AuthService.Data.Entities;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -7,32 +9,33 @@ using System.Text;
 
 namespace ResumeGenerator.AuthService.Application.Services;
 
-public class JwtTokenGenerator : ITokenGenerator
+public sealed class JwtTokenGenerator : ITokenGenerator
 {
-    private readonly IConfiguration _configuration;
+    private readonly JwtOptions _jwtOptions;
 
-    public JwtTokenGenerator(IConfiguration configuration)
+    public JwtTokenGenerator(IOptions<JwtOptions> jwtOptions)
     {
-        _configuration = configuration;
+        _jwtOptions = jwtOptions.Value;
     }
 
     public string GenerateToken(User user)
     {
-        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+        var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_jwtOptions.Key));
         var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+        var tokenExpiration = DateTime.UtcNow.Add(_jwtOptions.TokenLifetime);
 
         var claims = new[]
         {
             new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new Claim(ClaimTypes.Name, user.Username),
-            new Claim("chat_id", user.ChatId?.ToString() ?? string.Empty)
+            new Claim(ClaimTypes.Expiration, new DateTimeOffset(tokenExpiration).ToUnixTimeSeconds().ToString())
         };
 
         var token = new JwtSecurityToken(
-            _configuration["Jwt:Issuer"],
-            _configuration["Jwt:Audience"],
-            claims,
-            expires: DateTime.UtcNow.AddDays(7),
+            issuer: _jwtOptions.Issuer,
+            audience: _jwtOptions.Audience,
+            claims: claims,
+            expires: tokenExpiration,
             signingCredentials: credentials);
 
         return new JwtSecurityTokenHandler().WriteToken(token);
@@ -41,7 +44,7 @@ public class JwtTokenGenerator : ITokenGenerator
     public ClaimsPrincipal ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]);
+        var key = Encoding.UTF8.GetBytes(_jwtOptions.Key);
 
         var validationParameters = new TokenValidationParameters
         {
@@ -49,11 +52,19 @@ public class JwtTokenGenerator : ITokenGenerator
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
-            ValidIssuer = _configuration["Jwt:Issuer"],
-            ValidAudience = _configuration["Jwt:Audience"],
-            IssuerSigningKey = new SymmetricSecurityKey(key)
+            ValidIssuer = _jwtOptions.Issuer,
+            ValidAudience = _jwtOptions.Audience,
+            IssuerSigningKey = new SymmetricSecurityKey(key),
+            ClockSkew = TimeSpan.Zero
         };
 
-        return tokenHandler.ValidateToken(token, validationParameters, out _);
+        try
+        {
+            return tokenHandler.ValidateToken(token, validationParameters, out _);
+        }
+        catch (SecurityTokenException ex)
+        {
+            throw new InvalidTokenException(ex);
+        }
     }
 }

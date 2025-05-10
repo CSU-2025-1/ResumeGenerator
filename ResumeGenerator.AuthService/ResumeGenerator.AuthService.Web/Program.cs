@@ -1,6 +1,10 @@
+using ResumeGenerator.AuthService.Application.Configuration;
 using ResumeGenerator.AuthService.Web.Initializers;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
+builder.Services.Configure<TelegramBotOptions>(builder.Configuration.GetSection(TelegramBotOptions.SectionName));
 
 // Add services to the container.
 builder.Services.AddControllers();
@@ -13,7 +17,6 @@ builder.Services.AddDbContext<AppDbContext>(options =>
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
-builder.Services.AddScoped<IActivationCodeGenerator, RandomActivationCodeGenerator>();
 builder.Services.AddScoped<IBotLinkGenerator, TelegramBotLinkGenerator>();
 
 // Add validators
