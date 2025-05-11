@@ -1,4 +1,3 @@
-using System.Security.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using ResumeGenerator.AuthService.Application.DTO.Requests;
 using ResumeGenerator.AuthService.Application.DTO.Responses;
@@ -9,7 +8,7 @@ namespace ResumeGenerator.AuthService.Web.Controllers;
 
 [ApiController]
 [Route("auth/v1")]
-public class AuthController : ControllerBase
+public sealed class AuthController : ControllerBase
 {
     private readonly IAuthService _authService;
 
@@ -22,12 +21,13 @@ public class AuthController : ControllerBase
     [ProducesResponseType(typeof(RegisterUserResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
-    public async Task<IActionResult> Register(RegisterUserRequest request)
+    public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
     {
         try
         {
             var result = await _authService.RegisterUserAsync(request);
-            return CreatedAtAction(nameof(Register), result);
+            //return CreatedAtAction(nameof(Register), new { username = result.Username }, result);
+            return StatusCode(StatusCodes.Status201Created, result);
         }
         catch (UserAlreadyExistsException)
         {
@@ -44,7 +44,7 @@ public class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
-    public async Task<IActionResult> Login(LoginUserRequest request)
+    public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
     {
         try
         {

@@ -8,7 +8,7 @@ namespace ResumeGenerator.AuthService.Grpc;
 public sealed class AuthGrpcService : AuthServiceGrpc.AuthServiceGrpcBase
 {
     private readonly IAuthService _authService;
-
+    
     public AuthGrpcService(IAuthService authService)
     {
         _authService = authService;

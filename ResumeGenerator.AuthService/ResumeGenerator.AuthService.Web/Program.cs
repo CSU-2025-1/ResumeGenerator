@@ -1,34 +1,38 @@
+using Microsoft.EntityFrameworkCore;
 using ResumeGenerator.AuthService.Application.Configuration;
+using ResumeGenerator.AuthService.Application.Services;
+using ResumeGenerator.AuthService.Data.Context;
+using ResumeGenerator.AuthService.Grpc;
 using ResumeGenerator.AuthService.Web.Initializers;
+using Extensions.Hosting.AsyncInitialization;
+using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptions.SectionName));
 builder.Services.Configure<TelegramBotOptions>(builder.Configuration.GetSection(TelegramBotOptions.SectionName));
 
-// Add services to the container.
 builder.Services.AddControllers();
 
-// Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-// Add application services
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IBotLinkGenerator, TelegramBotLinkGenerator>();
 
-// Add validators
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+builder.Services.AddGrpc();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddAsyncInitializer<DatabaseInitializer>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -36,10 +40,10 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.UseAuthentication();
 app.UseAuthorization();
+
 app.MapControllers();
+app.MapGrpcService<AuthGrpcService>();
 
-// Apply migrations
-await app.MigrateDatabaseAsync();
-
-app.Run();
+await app.InitAndRunAsync();
