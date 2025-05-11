@@ -1,8 +1,13 @@
-﻿using ResumeGenerator.AuthService.Application.DTO.Requests;
+﻿using System.Threading;
+using Microsoft.EntityFrameworkCore;
+using ResumeGenerator.AuthService.Application.DTO.Requests;
 using ResumeGenerator.AuthService.Application.DTO.Responses;
 using ResumeGenerator.AuthService.Application.Exceptions;
 using ResumeGenerator.AuthService.Data.Context;
 using ResumeGenerator.AuthService.Data.Entities;
+using System.Threading.Tasks;
+using System.Security.Claims;
+using static ResumeGenerator.AuthService.Application.Services.IAuthService;
 
 namespace ResumeGenerator.AuthService.Application.Services;
 
@@ -25,9 +30,9 @@ public sealed class AuthService : IAuthService
         _botLinkGenerator = botLinkGenerator;
     }
 
-    public RegisterUserResponse RegisterUser(RegisterUserRequest request)
+    public async Task<RegisterUserResponse> RegisterUserAsync(RegisterUserRequest request, CancellationToken ct = default)
     {
-        if (_context.Users.Any(u => u.Username == request.Username))
+        if (await _context.Users.AnyAsync(u => u.Username == request.Username, ct))
         {
             throw new UserAlreadyExistsException(request.Username);
         }
@@ -42,27 +47,25 @@ public sealed class AuthService : IAuthService
             UpdatedAt = DateTime.UtcNow
         };
 
-        _context.Users.Add(user);
-        _context.SaveChanges();
+        await _context.Users.AddAsync(user, ct);
+        await _context.SaveChangesAsync(ct);
 
-        return new RegisterUserResponse(
-            user.Id
-        );
+        return new RegisterUserResponse(user.Id);
     }
 
-    public LoginUserResponse LoginUser(LoginUserRequest request)
+    public async Task<LoginUserResponse> LoginUserAsync(LoginUserRequest request, CancellationToken ct = default)
     {
-        var user = _context.Users
-            .FirstOrDefault(u => u.Username == request.Username);
+        var user = await _context.Users
+            .FirstOrDefaultAsync(u => u.Username == request.Username, ct);
 
         if (user == null)
-        { 
-            throw new UserNotFoundException(request.Username); 
+        {
+            throw new UserNotFoundException(request.Username);
         }
 
         if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
-        { 
-            throw new InvalidCredentialsException(); 
+        {
+            throw new InvalidCredentialsException();
         }
 
         if (!user.IsActive)
@@ -71,20 +74,41 @@ public sealed class AuthService : IAuthService
         }
 
         var token = _tokenGenerator.GenerateToken(user);
-        var expiresAt = DateTime.UtcNow.AddDays(7);
-
-        //var authToken = new AuthToken
-        //{
-        //    Id = Guid.NewGuid(),
-        //    UserId = user.Id,
-        //    Token = token,
-        //    CreatedAt = DateTime.UtcNow,
-        //    ExpiresAt = expiresAt
-        //};
-
-        //_context.AuthTokens.Add(authToken);
-        _context.SaveChanges();
-
         return new LoginUserResponse(token);
+    }
+
+    public async Task<ActivationResult> ActivateUserAsync(string activationCode, CancellationToken ct = default)
+    {
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == activationCode, ct);
+
+        if (user == null)
+        {
+            return new ActivationResult(false, "Пользователь не найден");
+        }
+
+        if (user.IsActive)
+        {
+            return new ActivationResult(true, "Пользователь уже активирован");
+        }
+
+        user.IsActive = true;
+        user.UpdatedAt = DateTime.UtcNow;
+
+        await _context.SaveChangesAsync(ct);
+
+        return new ActivationResult(true, "Аккаунт успешно активирован");
+    }
+
+    public async Task<UserDto> GetUserByTokenAsync(string token, CancellationToken ct = default)
+    {
+        var principal = _tokenGenerator.ValidateToken(token);
+        var userId = principal.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
+
+        var user = await _context.Users.FindAsync(new object[] { Guid.Parse(userId) }, ct);
+
+        if (user == null)
+            throw new InvalidOperationException("Пользователь не найден");
+
+        return new UserDto(user.Id, user.Username, user.IsActive);
     }
 }

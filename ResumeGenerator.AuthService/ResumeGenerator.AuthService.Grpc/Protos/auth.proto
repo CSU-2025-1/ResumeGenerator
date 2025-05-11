@@ -2,34 +2,26 @@
 
 option csharp_namespace = "ResumeGenerator.AuthService.Grpc";
 
-service AuthGrpcService {
-  // Активация пользователя через бота
+service AuthServiceGrpc {
   rpc ActivateUser (ActivateUserRequest) returns (ActivateUserResponse);
-  
-  // Получение данных пользователя по JWT
   rpc GetUserByToken (GetUserByTokenRequest) returns (GetUserByTokenResponse);
 }
 
-// Запрос для активации
 message ActivateUserRequest {
   string activation_code = 1;
 }
 
-// Ответ активации
 message ActivateUserResponse {
   bool success = 1;
   string message = 2;
 }
 
-// Запрос данных пользователя
 message GetUserByTokenRequest {
   string token = 1;
 }
 
-// Ответ с данными пользователя
 message GetUserByTokenResponse {
   string id = 1;
   string username = 2;
-  int64 chat_id = 3;
-  bool is_active = 4;
+  bool is_active = 3;
 }
