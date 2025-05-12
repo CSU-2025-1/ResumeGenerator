@@ -1,4 +1,7 @@
-﻿using ResumeGenerator.AuthService.Grpc;
+﻿using Microsoft.AspNetCore.Http;
+using ResumeGenerator.ApiService.Application.Exceptions;
+using ResumeGenerator.ApiService.Application.Results;
+using ResumeGenerator.AuthService.Grpc;
 
 namespace ResumeGenerator.ApiService.AuthClientGrpc;
 
@@ -18,7 +21,8 @@ public sealed class AuthService : IAuthService
 
         if (!response.IsActive)
         {
-            throw new UnauthorizedAccessException("User is not active");
+            UnauthorizedException.ThrowWithError(new Error(StatusCodes.Status401Unauthorized.ToString(),
+                $"User is not active"));
         }
 
         return Guid.Parse(response.Id);
