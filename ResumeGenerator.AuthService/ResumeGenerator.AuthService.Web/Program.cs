@@ -1,11 +1,10 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
 using ResumeGenerator.AuthService.Application.Configuration;
 using ResumeGenerator.AuthService.Application.Services;
 using ResumeGenerator.AuthService.Data.Context;
 using ResumeGenerator.AuthService.Grpc;
 using ResumeGenerator.AuthService.Web.Initializers;
-using Extensions.Hosting.AsyncInitialization;
-using FluentValidation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,10 +20,15 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IBotLinkGenerator, TelegramBotLinkGenerator>();
+builder.Services.AddScoped<ResumeGenerator.AuthService.Grpc.AuthInterceptor>();
 
 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
-builder.Services.AddGrpc();
+builder.Services.AddGrpc(options =>
+{
+    options.Interceptors.Add<AuthInterceptor>();
+});
+
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -44,6 +48,5 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
-app.MapGrpcService<AuthGrpcService>();
 
 await app.InitAndRunAsync();

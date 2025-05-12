@@ -34,7 +34,7 @@ public sealed class AuthService : IAuthService
     {
         if (await _context.Users.AnyAsync(u => u.Username == request.Username, ct))
         {
-            throw new UserAlreadyExistsException(request.Username);
+            throw new UserAlreadyExistsException();
         }
 
         var user = new User
@@ -47,10 +47,11 @@ public sealed class AuthService : IAuthService
             UpdatedAt = DateTime.UtcNow
         };
 
-        await _context.Users.AddAsync(user, ct);
+        _context.Users.Add(user);
         await _context.SaveChangesAsync(ct);
 
-        return new RegisterUserResponse(user.Id);
+        var botLink = _botLinkGenerator.GenerateLink(user.Id);
+        return new RegisterUserResponse(botLink);
     }
 
     public async Task<LoginUserResponse> LoginUserAsync(LoginUserRequest request, CancellationToken ct = default)
@@ -60,14 +61,14 @@ public sealed class AuthService : IAuthService
 
         if (user == null)
         {
-            throw new UserNotFoundException(request.Username);
+            throw new UserNotFoundException();
         }
 
         if (!_passwordHasher.VerifyPassword(request.Password, user.PasswordHash))
         {
             throw new InvalidCredentialsException();
         }
-
+            
         if (!user.IsActive)
         {
             throw new UserNotActiveException();
@@ -77,26 +78,24 @@ public sealed class AuthService : IAuthService
         return new LoginUserResponse(token);
     }
 
-    public async Task<ActivationResult> ActivateUserAsync(string activationCode, CancellationToken ct = default)
+    public async Task ActivateUserAsync(string activationCode, CancellationToken ct = default)
     {
         var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == activationCode, ct);
 
         if (user == null)
         {
-            return new ActivationResult(false, "Пользователь не найден");
+            throw new UserNotFoundException();
         }
 
         if (user.IsActive)
         {
-            return new ActivationResult(true, "Пользователь уже активирован");
+            throw new UserAlreadyActiveException();
         }
-
+            
         user.IsActive = true;
         user.UpdatedAt = DateTime.UtcNow;
 
         await _context.SaveChangesAsync(ct);
-
-        return new ActivationResult(true, "Аккаунт успешно активирован");
     }
 
     public async Task<UserDto> GetUserByTokenAsync(string token, CancellationToken ct = default)
@@ -104,10 +103,12 @@ public sealed class AuthService : IAuthService
         var principal = _tokenGenerator.ValidateToken(token);
         var userId = principal.Claims.First(x => x.Type == ClaimTypes.NameIdentifier).Value;
 
-        var user = await _context.Users.FindAsync(new object[] { Guid.Parse(userId) }, ct);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == Guid.Parse(userId), ct);
 
         if (user == null)
-            throw new InvalidOperationException("Пользователь не найден");
+        {
+            throw new UserNotFoundException();
+        }
 
         return new UserDto(user.Id, user.Username, user.IsActive);
     }

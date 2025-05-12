@@ -12,9 +12,8 @@ public sealed class TelegramBotLinkGenerator : IBotLinkGenerator
         _options = options.Value;
     }
 
-    public string GenerateLink(string guidUserId)
+    public string GenerateLink(Guid userId)
     {
-        return _options.DeepLinkTemplate
-            ?? $"https://t.me/{_options.Username}?start={guidUserId}";
+        return $"https://t.me/{_options.Username}?start={userId}";
     }
 }

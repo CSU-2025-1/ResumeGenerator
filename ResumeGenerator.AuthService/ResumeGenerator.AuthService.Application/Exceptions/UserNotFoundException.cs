@@ -2,6 +2,6 @@
 
 public sealed class UserNotFoundException : Exception
 {
-    public UserNotFoundException(string username)
-        : base($"User with username '{username}' not found") { }
+    public UserNotFoundException()
+        : base($"User account is not found") { }
 }

@@ -5,26 +5,27 @@ using ResumeGenerator.AuthService.Grpc;
 
 namespace ResumeGenerator.AuthService.Grpc;
 
-public sealed class AuthGrpcService : AuthServiceGrpc.AuthServiceGrpcBase
+public sealed class AuthInterceptor : AuthServiceGrpc.AuthServiceGrpcBase
 {
     private readonly IAuthService _authService;
     
-    public AuthGrpcService(IAuthService authService)
+    public AuthInterceptor(IAuthService authService)
     {
         _authService = authService;
     }
 
     public override async Task<ActivateUserResponse> ActivateUser(
-        ActivateUserRequest request,
-        ServerCallContext context)
+    ActivateUserRequest request,
+    ServerCallContext context)
     {
-        var result = await _authService.ActivateUserAsync(request.ActivationCode, context.CancellationToken);
+        await _authService.ActivateUserAsync(request.ActivationCode, context.CancellationToken);
         return new ActivateUserResponse
         {
-            Success = result.Success,
-            Message = result.Message
+            Message = "Аккаунт успешно активирован"
         };
     }
+
+
 
     public override async Task<GetUserByTokenResponse> GetUserByToken(
         GetUserByTokenRequest request,
