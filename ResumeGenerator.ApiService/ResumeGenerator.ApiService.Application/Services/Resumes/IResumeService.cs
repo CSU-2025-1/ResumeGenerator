@@ -5,7 +5,7 @@ namespace ResumeGenerator.ApiService.Application.Services.Resumes;
 
 public interface IResumeService
 {
-    Task<Resume> CreateResumeAsync(ResumeDto resume, CancellationToken ct = default);
+    Task<Resume> CreateResumeAsync(Guid userId, ResumeDto resume, CancellationToken ct = default);
 
     Task UpdateResumeStatusAsync(Guid resumeId, ResumeStatus newStatus, CancellationToken ct = default);
 

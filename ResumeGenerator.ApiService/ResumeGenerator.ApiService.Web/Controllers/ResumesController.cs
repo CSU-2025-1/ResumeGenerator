@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using ResumeGenerator.ApiService.Application.DTO.Requests.Resumes;
 using ResumeGenerator.ApiService.Application.DTO.Responses.Resumes;
+using ResumeGenerator.ApiService.Application.Exceptions;
 using ResumeGenerator.ApiService.Application.Handlers.Resumes;
+using ResumeGenerator.ApiService.Application.Results;
 using ResumeGenerator.ApiService.Web.Attributes;
 
 namespace ResumeGenerator.ApiService.Web.Controllers;
@@ -13,10 +15,12 @@ public sealed class ResumesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(GetResumesByUserIdResponse), StatusCodes.Status200OK)]
     public async Task<ActionResult<GetResumesByUserIdResponse>> GetAllResumesByUserId(
-        [FromQuery] Guid userId,
         [FromServices] GetAllResumesByUserIdHandler handler,
         CancellationToken ct = default)
     {
+        var userId = (Guid)HttpContext.Items["UserId"];
+        NotFoundException.ThrowIfNull(userId,
+            new Error(StatusCodes.Status404NotFound.ToString(), $"User with id: {userId} not found in database."));
         var result = await handler.Handle(new GetResumesByUserIdRequest
         {
             UserId = userId
@@ -48,8 +52,11 @@ public sealed class ResumesController : ControllerBase
         [FromServices] CreateResumeHandler handler,
         CancellationToken ct = default)
     {
-        await handler.Handle(request, ct);
+        var userId = (Guid)HttpContext.Items["UserId"];
+        NotFoundException.ThrowIfNull(userId,
+            new Error(StatusCodes.Status404NotFound.ToString(), $"User with id: {userId} not found in database."));
         
+        await handler.Handle(userId, request, ct);
         return Accepted();
     }
 
@@ -64,7 +71,7 @@ public sealed class ResumesController : ControllerBase
         {
             ResumeId = resumeId
         }, ct);
-        
+
         return NoContent();
     }
 }

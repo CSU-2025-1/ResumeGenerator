@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using ResumeGenerator.ApiService.Application.Extensions;
 using ResumeGenerator.ApiService.Application.Mapping;
+using ResumeGenerator.ApiService.AuthClientGrpc;
 using ResumeGenerator.ApiService.Data.Extentions;
 using ResumeGenerator.ApiService.Grpc;
 using ResumeGenerator.ApiService.Grpc.protos;
@@ -8,6 +9,7 @@ using ResumeGenerator.ApiService.Jobs;
 using ResumeGenerator.ApiService.Web.Extensions;
 using ResumeGenerator.ApiService.Web.Initializers;
 using ResumeGenerator.ApiService.Web.Middlewares;
+using ResumeGenerator.AuthService.Grpc;
 using Serilog;
 
 namespace ResumeGenerator.ApiService.Web;
@@ -45,6 +47,12 @@ public sealed class Startup
         {
             o.Address = new Uri(_configuration["TgBot"] ?? string.Empty);
         });
+        
+        services.AddSingleton<IAuthService, AuthClientGrpc.AuthService>();
+        services.AddGrpcClient<AuthServiceGrpc.AuthServiceGrpcClient>(o =>
+        {
+            o.Address = new Uri(_configuration["AuthService"] ?? string.Empty);
+        });
 
         services.AddHostedService<RetryFailedResumesJob>();
 
@@ -74,13 +82,15 @@ public sealed class Startup
         });
 
         services.AddSingleton<ErrorHandlingMiddleware>();
+        services.AddSingleton<AuthenticationMiddleware>();
         services.AddAsyncInitializer<MigrationAsyncInitializer>();
     }
 
     public void Configure(IApplicationBuilder app)
     {
         app.UseMiddleware<ErrorHandlingMiddleware>();
-
+        app.UseMiddleware<AuthenticationMiddleware>();
+        
         if (_environment.IsDevelopment())
         {
             app.UseSwagger();

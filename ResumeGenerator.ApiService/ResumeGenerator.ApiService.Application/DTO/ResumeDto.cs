@@ -5,7 +5,6 @@ namespace ResumeGenerator.ApiService.Application.DTO;
 public sealed record ResumeDto
 {
     public Guid Id { get; init; }
-    public Guid UserId { get; init; } //Костыль на время пока Аутха нет
     public string UserFirstName { get; init; }
     public string UserLastName { get; init; }
     public string UserPatronymic { get; init; }

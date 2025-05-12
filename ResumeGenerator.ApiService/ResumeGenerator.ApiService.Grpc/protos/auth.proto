@@ -1,0 +1,17 @@
+﻿syntax = "proto3";
+
+option csharp_namespace = "ResumeGenerator.AuthService.Grpc";
+
+service AuthServiceGrpc {
+  rpc GetUserByToken (GetUserByTokenRequest) returns (GetUserByTokenResponse);
+}
+
+message GetUserByTokenRequest {
+  string token = 1;
+}
+
+message GetUserByTokenResponse {
+  string id = 1;
+  string username = 2;
+  bool is_active = 3;
+}

@@ -20,14 +20,14 @@ public sealed class CreateResumeHandler
         _logger = logger;
     }
 
-    public async Task Handle(CreateResumeRequest request, CancellationToken ct = default)
+    public async Task Handle(Guid userId, CreateResumeRequest request, CancellationToken ct = default)
     {
         var validationResult = await _validator.ValidateAsync(request, ct);
         BadRequestException.ThrowByValidationResult(validationResult);
 
-        var resume = await _resumeService.CreateResumeAsync(request.Resume, ct);
+        var resume = await _resumeService.CreateResumeAsync(userId, request.Resume, ct);
 
         _logger.LogInformation("User with id {UserId} successfully created resume with id {ResumeId}.",
-            request.Resume.UserId, resume.Id);
+            userId, resume.Id);
     }
 }

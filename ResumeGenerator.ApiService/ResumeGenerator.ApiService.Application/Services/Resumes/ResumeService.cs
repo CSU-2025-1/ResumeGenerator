@@ -24,9 +24,11 @@ public sealed class ResumeService : IResumeService
         _bus = bus;
     }
 
-    public async Task<Resume> CreateResumeAsync(ResumeDto resume, CancellationToken ct = default)
+    public async Task<Resume> CreateResumeAsync(Guid userId, ResumeDto resume, CancellationToken ct = default)
     {
         var newResume = _mapper.Map<Resume>(resume);
+        newResume.UserId = userId;
+        
         _context.Resumes.Add(newResume);
         await _context.SaveChangesAsync(ct);
 
@@ -34,7 +36,7 @@ public sealed class ResumeService : IResumeService
 
         return newResume;
     }
-    
+
     public async Task UpdateResumeStatusAsync(Guid resumeId, ResumeStatus newStatus, CancellationToken ct = default)
     {
         var resume = await _context.Resumes.FirstOrDefaultAsync(r => r.Id == resumeId, ct);
@@ -56,7 +58,7 @@ public sealed class ResumeService : IResumeService
     {
         var resume = await _context.Resumes
             .FirstOrDefaultAsync(r => r.Id == resumeId, ct);
-        
+
         NotFoundException.ThrowIfNull(resume,
             new Error(StatusCodes.Status404NotFound.ToString(), $"Resume with id: {resumeId} not found in database."));
 
@@ -67,12 +69,12 @@ public sealed class ResumeService : IResumeService
     {
         var resume = await _context.Resumes
             .FirstOrDefaultAsync(r => r.Id == resumeId, ct);
-        
+
         NotFoundException.ThrowIfNull(resume,
             new Error(StatusCodes.Status404NotFound.ToString(), $"Resume with id: {resumeId} not found in database."));
 
         _context.Resumes.Remove(resume!);
-        
+
         await _context.SaveChangesAsync(ct);
     }
 }
