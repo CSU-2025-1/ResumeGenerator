@@ -6,7 +6,7 @@ using ResumeGenerator.AuthService.Application.Exceptions;
 
 public sealed class AuthInterceptor : Interceptor
 {
-    public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>(
+    public override async Task<TResponse> UnaryServerHandler<TRequest, TResponse>   (
         TRequest request,
         ServerCallContext context,
         UnaryServerMethod<TRequest, TResponse> continuation)
@@ -23,9 +23,17 @@ public sealed class AuthInterceptor : Interceptor
         {
             throw new RpcException(new Status(StatusCode.Unauthenticated, ex.Message));
         }
+        catch (InvalidTokenException ex)
+        {
+            throw new RpcException(new Status(StatusCode.Unauthenticated, ex.Message));
+        }
         catch (UserNotActiveException ex)
         {
             throw new RpcException(new Status(StatusCode.FailedPrecondition, ex.Message));
+        }
+        catch (UserAlreadyExistsException ex)
+        {
+            throw new RpcException(new Status(StatusCode.AlreadyExists, ex.Message));
         }
         catch (UserAlreadyActiveException ex)
         {

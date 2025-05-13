@@ -10,6 +10,5 @@ public sealed class User
     public bool IsActive { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
-    public ICollection<AuthToken> AuthTokens { get; set; } = [];
 }
 

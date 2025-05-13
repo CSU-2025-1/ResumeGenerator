@@ -21,8 +21,14 @@ public sealed class AuthController : ControllerBase
     [ProducesResponseType(typeof(RegisterUserResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status409Conflict)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
     {
+
+        if (!ModelState.IsValid)
+        { 
+            return BadRequest("Invalid request"); 
+        }
         try
         {
             var result = await _authService.RegisterUserAsync(request);
@@ -33,9 +39,13 @@ public sealed class AuthController : ControllerBase
         {
             return Conflict("Username already exists");
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 
@@ -44,8 +54,13 @@ public sealed class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status422UnprocessableEntity)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
     {
+        if (!ModelState.IsValid)
+        { 
+            return BadRequest("Invalid request"); 
+        }
         try
         {
             var result = await _authService.LoginUserAsync(request);
@@ -63,9 +78,13 @@ public sealed class AuthController : ControllerBase
         {
             return UnprocessableEntity("User account is not activated");
         }
-        catch (Exception ex)
+        catch (ArgumentException ex)
         {
             return BadRequest(ex.Message);
+        }
+        catch (Exception ex)
+        {
+            return StatusCode(StatusCodes.Status500InternalServerError, "Internal server error");
         }
     }
 }
