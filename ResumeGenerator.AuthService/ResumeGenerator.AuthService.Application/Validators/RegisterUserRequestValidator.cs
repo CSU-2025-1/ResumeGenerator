@@ -12,9 +12,6 @@ public class RegisterUserRequestValidator : AbstractValidator<RegisterUserReques
             .MinimumLength(3)
             .MaximumLength(50);
 
-        RuleFor(x => x.Password)
-            .NotEmpty()
-            .MinimumLength(6)
-            .MaximumLength(100);
+        RuleFor(x => x.Password).ApplyPasswordRules();
     }
 }
