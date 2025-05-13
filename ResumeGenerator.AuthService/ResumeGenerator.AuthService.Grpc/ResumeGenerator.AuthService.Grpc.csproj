@@ -1,0 +1,19 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<TargetFramework>net9.0</TargetFramework>
+		<Nullable>enable</Nullable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Grpc.AspNetCore" Version="2.62.0" />
+		<PackageReference Include="Google.Protobuf" Version="3.25.3" />
+		<PackageReference Include="Grpc.Tools" Version="2.62.0">
+			<PrivateAssets>All</PrivateAssets>
+		</PackageReference>
+	</ItemGroup>
+
+	<ItemGroup>
+		<Protobuf Include="Protos\auth.proto" GrpcServices="Server" />
+		<ProjectReference Include="..\ResumeGenerator.AuthService.Application\ResumeGenerator.AuthService.Application.csproj" />
+	</ItemGroup>
+</Project>
