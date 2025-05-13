@@ -24,11 +24,6 @@ public sealed class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Register([FromBody] RegisterUserRequest request)
     {
-
-        if (!ModelState.IsValid)
-        { 
-            return BadRequest("Invalid request"); 
-        }
         try
         {
             var result = await _authService.RegisterUserAsync(request);
@@ -57,10 +52,6 @@ public sealed class AuthController : ControllerBase
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> Login([FromBody] LoginUserRequest request)
     {
-        if (!ModelState.IsValid)
-        { 
-            return BadRequest("Invalid request"); 
-        }
         try
         {
             var result = await _authService.LoginUserAsync(request);

@@ -1,7 +1,9 @@
 using FluentValidation;
+using FluentValidation.AspNetCore;
 using Microsoft.EntityFrameworkCore;
 using ResumeGenerator.AuthService.Application.Configuration;
 using ResumeGenerator.AuthService.Application.Services;
+using ResumeGenerator.AuthService.Application.Validators;
 using ResumeGenerator.AuthService.Data.Context;
 using ResumeGenerator.AuthService.Grpc;
 using ResumeGenerator.AuthService.Web.Initializers;
@@ -12,6 +14,9 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptio
 builder.Services.Configure<TelegramBotOptions>(builder.Configuration.GetSection(TelegramBotOptions.SectionName));
 
 builder.Services.AddControllers();
+builder.Services.AddValidatorsFromAssembly(typeof(IAuthService).Assembly); //регистрирует все валидаторы из application
+builder.Services.AddFluentValidationAutoValidation();
+builder.Services.AddFluentValidationClientsideAdapters();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
     options.UseNpgsql(builder.Configuration.GetConnectionString("DefaultConnection")));
@@ -21,8 +26,6 @@ builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IBotLinkGenerator, TelegramBotLinkGenerator>();
 builder.Services.AddScoped<ResumeGenerator.AuthService.Grpc.AuthInterceptor>();
-
-builder.Services.AddValidatorsFromAssemblyContaining<Program>();
 
 builder.Services.AddGrpc(options =>
 {
