@@ -2,7 +2,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ResumeGenerator.TelegramAdapter.Core;
 using ResumeGenerator.TelegramAdapter.Core.Extensions;
-using ResumeGenerator.TelegramAdapter.Grpc.Services;
+using ResumeGenerator.TelegramAdapter.Grpc.Clients.Generated;
+using ResumeGenerator.TelegramAdapter.Grpc.Server.Services;
 using ResumeGenerator.TelegramAdapter.Infrastructure.Minio.Extensions;
 using ResumeGenerator.TelegramAdapter.Infrastructure.Persistence;
 using ResumeGenerator.TelegramAdapter.Infrastructure.Persistence.Extensions;
@@ -34,6 +35,9 @@ builder.Services.AddTelegramBotClient(telegramBotClient);
 builder.Services.AddPersistence(conString);
 
 builder.Services.AddMinio(builder.Configuration.GetSection("Minio"));
+
+builder.Services.AddGrpc();
+builder.Services.AddGrpcClient<AuthServiceGrpc.AuthServiceGrpcClient>();
 
 var app = builder.Build();
 

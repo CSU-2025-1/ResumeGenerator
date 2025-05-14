@@ -1,6 +1,9 @@
+using Grpc.Core;
+using Microsoft.Extensions.Logging;
 using ResumeGenerator.TelegramAdapter.Core.Abstractions;
 using ResumeGenerator.TelegramAdapter.Core.Entities;
 using ResumeGenerator.TelegramAdapter.Core.Exceptions;
+using ResumeGenerator.TelegramAdapter.Grpc.Clients.Generated;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -9,10 +12,17 @@ namespace ResumeGenerator.TelegramAdapter.Core.UpdateHandlers;
 public sealed class StartCommandUpdateHandler : IUpdateHandler
 {
     private readonly ITelegramChatRepository _telegramChatRepository;
+    private readonly AuthServiceGrpc.AuthServiceGrpcClient _authServiceGrpcClient;
+    private readonly ILogger<StartCommandUpdateHandler> _logger;
 
-    public StartCommandUpdateHandler(ITelegramChatRepository telegramChatRepository)
+    public StartCommandUpdateHandler(
+        ITelegramChatRepository telegramChatRepository,
+        AuthServiceGrpc.AuthServiceGrpcClient authServiceGrpcClient,
+        ILogger<StartCommandUpdateHandler> logger)
     {
         _telegramChatRepository = telegramChatRepository;
+        _authServiceGrpcClient = authServiceGrpcClient;
+        _logger = logger;
     }
 
     public ValueTask<bool> CanHandleAsync(Update update, CancellationToken ct = default)
@@ -36,11 +46,27 @@ public sealed class StartCommandUpdateHandler : IUpdateHandler
             throw new InvalidActivationCodeException();
         }
 
-        // TODO отправить запрос в auth-service для активации пользователя
+        await ActivateUserAsync(activationCodeString, ct);
+
         await _telegramChatRepository.SaveChatAsync(new TelegramChat
         {
             ExtId = update.Message.Chat.Id,
             UserId = activationCode
         }, ct);
+    }
+
+    private async Task ActivateUserAsync(string activationCode, CancellationToken ct = default)
+    {
+        try
+        {
+            await _authServiceGrpcClient.ActivateUserAsync(new ActivateUserRequest
+            {
+                ActivationCode = activationCode
+            }, cancellationToken: ct).ResponseAsync;
+        }
+        catch (RpcException e)
+        {
+            _logger.LogError(e, "Failed to activate user with status-code {Code}", e.StatusCode);
+        }
     }
 }

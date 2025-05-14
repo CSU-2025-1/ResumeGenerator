@@ -1,11 +1,11 @@
 using Google.Protobuf.WellKnownTypes;
 using Grpc.Core;
 using ResumeGenerator.TelegramAdapter.Core.Abstractions;
-using ResumeGenerator.TelegramAdapter.Grpc.Generated;
+using ResumeGenerator.TelegramAdapter.Grpc.Server.Generated;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace ResumeGenerator.TelegramAdapter.Grpc.Services;
+namespace ResumeGenerator.TelegramAdapter.Grpc.Server.Services;
 
 public sealed class TelegramAdapterService : Generated.TelegramAdapter.TelegramAdapterBase
 {

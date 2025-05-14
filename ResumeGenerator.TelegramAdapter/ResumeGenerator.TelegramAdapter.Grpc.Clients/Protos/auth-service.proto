@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "ResumeGenerator.TelegramAdapter.Grpc.Clients.Generated";
+
+service AuthServiceGrpc {
+  rpc ActivateUser (ActivateUserRequest) returns (ActivateUserResponse);
+}
+
+message ActivateUserRequest {
+  string activation_code = 1;
+}
+
+message ActivateUserResponse {
+  string message = 1;
+}
