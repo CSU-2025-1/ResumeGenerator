@@ -1,6 +1,6 @@
 syntax = "proto3";
 
-option csharp_namespace = "ResumeGenerator.TelegramAdapter.Grpc.Generated";
+option csharp_namespace = "ResumeGenerator.TelegramAdapter.Grpc.Server.Generated";
 
 import "google/protobuf/empty.proto";
 

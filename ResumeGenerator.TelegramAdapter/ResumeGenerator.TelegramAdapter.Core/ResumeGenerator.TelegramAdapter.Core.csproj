@@ -13,4 +13,8 @@
         <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Grpc.Clients\ResumeGenerator.TelegramAdapter.Grpc.Clients.csproj" />
+    </ItemGroup>
+
 </Project>
