@@ -1,13 +1,8 @@
-﻿using System.Threading.Tasks;
-using System.Threading;
-using System;
+﻿using Extensions.Hosting.AsyncInitialization;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
-using ResumeGenerator.AuthService.Data.Context;
+using ResumeGenerator.ApiService.Data.Context;
 
-namespace ResumeGenerator.AuthService.Web.Initializers;
+namespace ResumeGenerator.ApiService.Web.Initializers;
 
 public sealed class DatabaseInitializer : IAsyncInitializer
 {

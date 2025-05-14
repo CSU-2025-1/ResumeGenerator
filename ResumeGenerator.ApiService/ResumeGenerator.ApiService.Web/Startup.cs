@@ -47,7 +47,7 @@ public sealed class Startup
         {
             o.Address = new Uri(_configuration["TgBot"] ?? string.Empty);
         });
-        
+
         services.AddSingleton<IAuthService, AuthClientGrpc.AuthService>();
         services.AddGrpcClient<AuthServiceGrpc.AuthServiceGrpcClient>(o =>
         {
@@ -83,14 +83,14 @@ public sealed class Startup
 
         services.AddSingleton<ErrorHandlingMiddleware>();
         services.AddSingleton<AuthenticationMiddleware>();
-        services.AddAsyncInitializer<MigrationAsyncInitializer>();
+        services.AddAsyncInitializer<DatabaseInitializer>();
     }
 
     public void Configure(IApplicationBuilder app)
     {
         app.UseMiddleware<ErrorHandlingMiddleware>();
         app.UseMiddleware<AuthenticationMiddleware>();
-        
+
         if (_environment.IsDevelopment())
         {
             app.UseSwagger();
