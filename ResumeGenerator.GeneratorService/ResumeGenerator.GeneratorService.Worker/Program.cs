@@ -27,10 +27,10 @@ public static class Program
             x.AddConsumer<CreateResumeCommandConsumer>();
             x.UsingRabbitMq((context, cfg) =>
             {
-                cfg.Host("localhost", "/", h =>
+                cfg.Host(builder.Configuration["RabbitMq:Host"], builder.Configuration["RabbitMq:VirtualHost"], h =>
                 {
-                    h.Username("guest");
-                    h.Password("guest");
+                    h.Username(builder.Configuration["RabbitMq:Username"]);
+                    h.Password(builder.Configuration["RabbitMq:Password"]);
                 });
 
                 cfg.ConfigureEndpoints(context);
