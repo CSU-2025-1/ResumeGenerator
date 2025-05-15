@@ -5,6 +5,7 @@
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <RootNamespace>ResumeGenerator.TelegramAdapter.Api</RootNamespace>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     </PropertyGroup>
 
     <ItemGroup>
@@ -12,6 +13,12 @@
       <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Grpc.Clients\ResumeGenerator.TelegramAdapter.Grpc.Clients.csproj" />
       <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Grpc.Server\ResumeGenerator.TelegramAdapter.Grpc.Server.csproj" />
       <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Infrastructure\ResumeGenerator.TelegramAdapter.Infrastructure.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Content Include="..\.dockerignore">
+        <Link>.dockerignore</Link>
+      </Content>
     </ItemGroup>
 
 </Project>

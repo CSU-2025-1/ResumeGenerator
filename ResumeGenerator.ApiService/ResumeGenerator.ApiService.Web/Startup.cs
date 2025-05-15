@@ -74,7 +74,7 @@ public sealed class Startup
         });
 
         services.AddSingleton<ErrorHandlingMiddleware>();
-        services.AddAsyncInitializer<MigrationAsyncInitializer>();
+        services.AddAsyncInitializer<DatabaseInitializer>();
     }
 
     public void Configure(IApplicationBuilder app)
