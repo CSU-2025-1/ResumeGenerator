@@ -1,5 +1,4 @@
 using CSharpFunctionalExtensions;
-using Microsoft.Extensions.Options;
 using Minio;
 using Minio.DataModel.Args;
 using ResumeGenerator.TelegramAdapter.Core.Abstractions;
@@ -8,13 +7,12 @@ namespace ResumeGenerator.TelegramAdapter.Infrastructure.Minio;
 
 public sealed class ResumeRepository : IResumeRepository
 {
+    private const string BucketName = "resumes";
     private readonly IMinioClient _minioClient;
-    private readonly MinioConfig _config;
 
-    public ResumeRepository(IMinioClient minioClient, IOptions<MinioConfig> minioConfig)
+    public ResumeRepository(IMinioClient minioClient)
     {
         _minioClient = minioClient;
-        _config = minioConfig.Value;
     }
 
     public async Task<Maybe<MemoryStream>> GetResumeByIdAsync(Guid id, CancellationToken ct = default)
@@ -22,7 +20,7 @@ public sealed class ResumeRepository : IResumeRepository
         var ms = new MemoryStream();
 
         bool bucketExists = await _minioClient.BucketExistsAsync(new BucketExistsArgs()
-                .WithBucket(_config.BucketName),
+                .WithBucket(BucketName),
             cancellationToken: ct);
         if (!bucketExists)
         {
@@ -32,7 +30,7 @@ public sealed class ResumeRepository : IResumeRepository
         try
         {
             await _minioClient.GetObjectAsync(new GetObjectArgs()
-                    .WithBucket(_config.BucketName)
+                    .WithBucket(BucketName)
                     .WithObject($"{id}.pdf")
                     .WithCallbackStream(stream =>
                     {

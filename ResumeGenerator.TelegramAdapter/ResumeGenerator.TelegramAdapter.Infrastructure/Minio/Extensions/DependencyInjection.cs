@@ -14,7 +14,6 @@ public static class DependencyInjection
             .WithCredentials(section["AccessKey"], section["SecretKey"])
             .WithSSL(false)
             .Build());
-        services.Configure<MinioConfig>(section);
         services.AddScoped<IResumeRepository, ResumeRepository>();
     }
 }
