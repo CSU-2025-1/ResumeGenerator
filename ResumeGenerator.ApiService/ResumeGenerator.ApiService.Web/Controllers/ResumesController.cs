@@ -18,12 +18,16 @@ public sealed class ResumesController : ControllerBase
         [FromServices] GetAllResumesByUserIdHandler handler,
         CancellationToken ct = default)
     {
-        var userId = (Guid)HttpContext.Items["UserId"];
-        NotFoundException.ThrowIfNull(userId,
-            new Error(StatusCodes.Status404NotFound.ToString(), $"User with id: {userId} not found in database."));
+        var userId = (Guid?)HttpContext.Items["UserId"];
+        if (userId == Guid.Empty || userId == null)
+        {
+            UnauthorizedException.ThrowWithError(new Error(StatusCodes.Status401Unauthorized.ToString(),
+                "User not found in database."));
+        }
+
         var result = await handler.Handle(new GetResumesByUserIdRequest
         {
-            UserId = userId
+            UserId = (Guid)userId
         }, ct);
 
         return Ok(result);
@@ -52,12 +56,14 @@ public sealed class ResumesController : ControllerBase
         [FromServices] CreateResumeHandler handler,
         CancellationToken ct = default)
     {
-        var userId = (Guid)HttpContext.Items["UserId"];
-        NotFoundException.ThrowIfNull(userId,
-            new Error(StatusCodes.Status404NotFound.ToString(), $"User with id: {userId} not found in database."));
+        var userId = (Guid?)HttpContext.Items["UserId"];
+        if (userId == Guid.Empty || userId == null)
+        {
+            UnauthorizedException.ThrowWithError(new Error(StatusCodes.Status401Unauthorized.ToString(),
+                "User not found in database."));
+        }
 
-        
-        await handler.Handle(request with { Resume = request.Resume with { UserId = userId } } , ct);
+        await handler.Handle(request with { Resume = request.Resume with { UserId = (Guid)userId } }, ct);
         return Accepted();
     }
 

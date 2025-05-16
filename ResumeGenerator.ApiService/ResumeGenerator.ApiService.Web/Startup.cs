@@ -9,7 +9,6 @@ using ResumeGenerator.ApiService.Jobs;
 using ResumeGenerator.ApiService.Web.Extensions;
 using ResumeGenerator.ApiService.Web.Initializers;
 using ResumeGenerator.ApiService.Web.Middlewares;
-using ResumeGenerator.AuthService.Grpc;
 using Serilog;
 
 namespace ResumeGenerator.ApiService.Web;
@@ -48,7 +47,7 @@ public sealed class Startup
             o.Address = new Uri(_configuration["TgBot"] ?? string.Empty);
         });
 
-        services.AddSingleton<IAuthService, AuthClientGrpc.AuthService>();
+        services.AddSingleton<IAuthService, AuthService>();
         services.AddGrpcClient<AuthServiceGrpc.AuthServiceGrpcClient>(o =>
         {
             o.Address = new Uri(_configuration["AuthService"] ?? string.Empty);

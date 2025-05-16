@@ -1,9 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using ResumeGenerator.ApiService.Application.Exceptions;
 using ResumeGenerator.ApiService.Application.Results;
-using ResumeGenerator.AuthService.Grpc;
+using ResumeGenerator.ApiService.AuthClientGrpc;
+using ResumeGenerator.ApiService.Grpc.protos;
 
-namespace ResumeGenerator.ApiService.AuthClientGrpc;
+namespace ResumeGenerator.ApiService.Grpc;
 
 public sealed class AuthService : IAuthService
 {
