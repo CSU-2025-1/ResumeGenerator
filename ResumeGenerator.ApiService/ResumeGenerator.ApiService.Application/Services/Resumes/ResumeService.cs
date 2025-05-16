@@ -24,10 +24,10 @@ public sealed class ResumeService : IResumeService
         _bus = bus;
     }
 
-    public async Task<Resume> CreateResumeAsync(Guid userId, ResumeDto resume, CancellationToken ct = default)
+    public async Task<Resume> CreateResumeAsync(ResumeDto resume, CancellationToken ct = default)
     {
         var newResume = _mapper.Map<Resume>(resume);
-        newResume.UserId = userId;
+        newResume.UserId = resume.UserId;
         
         _context.Resumes.Add(newResume);
         await _context.SaveChangesAsync(ct);

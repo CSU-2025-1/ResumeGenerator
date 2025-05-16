@@ -55,8 +55,9 @@ public sealed class ResumesController : ControllerBase
         var userId = (Guid)HttpContext.Items["UserId"];
         NotFoundException.ThrowIfNull(userId,
             new Error(StatusCodes.Status404NotFound.ToString(), $"User with id: {userId} not found in database."));
+
         
-        await handler.Handle(userId, request, ct);
+        await handler.Handle(request with { Resume = request.Resume with { UserId = userId } } , ct);
         return Accepted();
     }
 

@@ -5,6 +5,7 @@ namespace ResumeGenerator.ApiService.Application.DTO;
 public sealed record ResumeDto
 {
     public Guid Id { get; init; }
+    public Guid UserId { get; init; }
     public string UserFirstName { get; init; }
     public string UserLastName { get; init; }
     public string UserPatronymic { get; init; }
@@ -17,6 +18,6 @@ public sealed record ResumeDto
     public int ExperienceYears { get; init; }
     public string HardSkills { get; init; }
     public string SoftSkills { get; init; }
-    
+
     public ResumeStatus ResumeStatus { get; init; } = ResumeStatus.ResumeMakingInProgress;
 }
