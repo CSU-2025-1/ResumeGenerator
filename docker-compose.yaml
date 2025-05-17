@@ -51,6 +51,7 @@ services:
       Redis__Configuration: ${Redis__Configuration}
       Redis__InstanceName: ${Redis__InstanceName}
       TgBot: "http://telegram-adapter:8081"
+      AuthService__Url: "http://auth-service:8081"
     depends_on:
       api-db:
         condition: service_healthy
