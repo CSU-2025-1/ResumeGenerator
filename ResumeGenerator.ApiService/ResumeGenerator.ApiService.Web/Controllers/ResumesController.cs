@@ -1,13 +1,14 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ResumeGenerator.ApiService.Application.DTO.Requests.Resumes;
 using ResumeGenerator.ApiService.Application.DTO.Responses.Resumes;
-using ResumeGenerator.ApiService.Application.Exceptions;
 using ResumeGenerator.ApiService.Application.Handlers.Resumes;
-using ResumeGenerator.ApiService.Application.Results;
 using ResumeGenerator.ApiService.Web.Attributes;
 
 namespace ResumeGenerator.ApiService.Web.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/v1/[controller]")]
 public sealed class ResumesController : ControllerBase
@@ -18,16 +19,9 @@ public sealed class ResumesController : ControllerBase
         [FromServices] GetAllResumesByUserIdHandler handler,
         CancellationToken ct = default)
     {
-        var userId = (Guid?)HttpContext.Items["UserId"];
-        if (userId == Guid.Empty || userId == null)
-        {
-            UnauthorizedException.ThrowWithError(new Error(StatusCodes.Status401Unauthorized.ToString(),
-                "User not found in database."));
-        }
-
         var result = await handler.Handle(new GetResumesByUserIdRequest
         {
-            UserId = (Guid)userId
+            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)
         }, ct);
 
         return Ok(result);
@@ -40,17 +34,10 @@ public sealed class ResumesController : ControllerBase
         [FromServices] GetResumeByIdHandler handler,
         CancellationToken ct = default)
     {
-        var userId = (Guid?)HttpContext.Items["UserId"];
-        if (userId == Guid.Empty || userId == null)
-        {
-            UnauthorizedException.ThrowWithError(new Error(StatusCodes.Status401Unauthorized.ToString(),
-                "User not found in database."));
-        }
-        
         var result = await handler.Handle(new GetResumeByIdRequest
         {
             ResumeId = resumeId,
-            UserId = (Guid)userId
+            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)
         }, ct);
 
         return Ok(result);
@@ -64,14 +51,12 @@ public sealed class ResumesController : ControllerBase
         [FromServices] CreateResumeHandler handler,
         CancellationToken ct = default)
     {
-        var userId = (Guid?)HttpContext.Items["UserId"];
-        if (userId == Guid.Empty || userId == null)
+        request.Resume = request.Resume with
         {
-            UnauthorizedException.ThrowWithError(new Error(StatusCodes.Status401Unauthorized.ToString(),
-                "User not found in database."));
-        }
+            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)
+        };
+        await handler.Handle(request, ct);
 
-        await handler.Handle(request with { Resume = request.Resume with { UserId = (Guid)userId } }, ct);
         return Accepted();
     }
 
@@ -81,18 +66,11 @@ public sealed class ResumesController : ControllerBase
         [FromRoute] Guid resumeId,
         [FromServices] DeleteResumeByIdHandler handler,
         CancellationToken ct = default)
-    {   
-        var userId = (Guid?)HttpContext.Items["UserId"];
-        if (userId == Guid.Empty || userId == null)
-        {
-            UnauthorizedException.ThrowWithError(new Error(StatusCodes.Status401Unauthorized.ToString(),
-                "User not found in database."));
-        }
-        
+    {
         await handler.Handle(new DeleteResumeByIdRequest
         {
             ResumeId = resumeId,
-            UserId = (Guid)userId
+            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)
         }, ct);
 
         return NoContent();

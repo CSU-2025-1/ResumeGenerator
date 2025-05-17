@@ -1,11 +1,12 @@
 ﻿using MassTransit;
 using ResumeGenerator.ApiService.Application.Extensions;
 using ResumeGenerator.ApiService.Application.Mapping;
-using ResumeGenerator.ApiService.AuthClientGrpc;
+using ResumeGenerator.ApiService.Application.Services.Auth;
 using ResumeGenerator.ApiService.Data.Extentions;
 using ResumeGenerator.ApiService.Grpc;
 using ResumeGenerator.ApiService.Grpc.protos;
 using ResumeGenerator.ApiService.Jobs;
+using ResumeGenerator.ApiService.Web.Authentication;
 using ResumeGenerator.ApiService.Web.Extensions;
 using ResumeGenerator.ApiService.Web.Initializers;
 using ResumeGenerator.ApiService.Web.Middlewares;
@@ -50,7 +51,7 @@ public sealed class Startup
         services.AddSingleton<IAuthService, AuthService>();
         services.AddGrpcClient<AuthServiceGrpc.AuthServiceGrpcClient>(o =>
         {
-            o.Address = new Uri(_configuration["AuthService"] ?? string.Empty);
+            o.Address = new Uri(_configuration["AuthService:Url"] ?? string.Empty);
         });
 
         services.AddHostedService<RetryFailedResumesJob>();
@@ -74,6 +75,11 @@ public sealed class Startup
             });
         });
 
+        services.AddAuthentication(AuthServiceAuthenticationOptions.DefaultScheme)
+            .AddScheme<AuthServiceAuthenticationOptions, AuthServiceAuthenticationHandler>(
+                AuthServiceAuthenticationOptions.DefaultScheme, null
+            );
+
         services.AddStackExchangeRedisCache(options =>
         {
             options.Configuration = _configuration["Redis:Configuration"];
@@ -81,14 +87,12 @@ public sealed class Startup
         });
 
         services.AddSingleton<ErrorHandlingMiddleware>();
-        services.AddSingleton<AuthenticationMiddleware>();
         services.AddAsyncInitializer<DatabaseInitializer>();
     }
 
     public void Configure(IApplicationBuilder app)
     {
         app.UseMiddleware<ErrorHandlingMiddleware>();
-        app.UseMiddleware<AuthenticationMiddleware>();
 
         if (_environment.IsDevelopment())
         {

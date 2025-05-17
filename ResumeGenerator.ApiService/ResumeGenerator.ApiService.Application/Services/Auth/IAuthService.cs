@@ -1,4 +1,4 @@
-﻿namespace ResumeGenerator.ApiService.AuthClientGrpc;
+﻿namespace ResumeGenerator.ApiService.Application.Services.Auth;
 
 public interface IAuthService
 {

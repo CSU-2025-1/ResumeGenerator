@@ -2,5 +2,5 @@
 
 public sealed record CreateResumeRequest
 {
-    public required ResumeDto Resume { get; init; }
+    public required ResumeDto Resume { get; set; }
 }
