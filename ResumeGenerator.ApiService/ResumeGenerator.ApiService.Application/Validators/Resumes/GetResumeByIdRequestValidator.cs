@@ -10,5 +10,9 @@ public sealed class GetResumeByIdRequestValidator : AbstractValidator<GetResumeB
         RuleFor(request => request.ResumeId)
             .NotEqual(Guid.Empty)
             .NotEmpty();
+        
+        RuleFor(request => request.UserId)
+            .NotEqual(Guid.Empty)
+            .NotEmpty();
     }
 }

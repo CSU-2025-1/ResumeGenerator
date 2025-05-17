@@ -40,9 +40,17 @@ public sealed class ResumesController : ControllerBase
         [FromServices] GetResumeByIdHandler handler,
         CancellationToken ct = default)
     {
+        var userId = (Guid?)HttpContext.Items["UserId"];
+        if (userId == Guid.Empty || userId == null)
+        {
+            UnauthorizedException.ThrowWithError(new Error(StatusCodes.Status401Unauthorized.ToString(),
+                "User not found in database."));
+        }
+        
         var result = await handler.Handle(new GetResumeByIdRequest
         {
-            ResumeId = resumeId
+            ResumeId = resumeId,
+            UserId = (Guid)userId
         }, ct);
 
         return Ok(result);
@@ -73,10 +81,18 @@ public sealed class ResumesController : ControllerBase
         [FromRoute] Guid resumeId,
         [FromServices] DeleteResumeByIdHandler handler,
         CancellationToken ct = default)
-    {
+    {   
+        var userId = (Guid?)HttpContext.Items["UserId"];
+        if (userId == Guid.Empty || userId == null)
+        {
+            UnauthorizedException.ThrowWithError(new Error(StatusCodes.Status401Unauthorized.ToString(),
+                "User not found in database."));
+        }
+        
         await handler.Handle(new DeleteResumeByIdRequest
         {
-            ResumeId = resumeId
+            ResumeId = resumeId,
+            UserId = (Guid)userId
         }, ct);
 
         return NoContent();

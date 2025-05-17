@@ -31,7 +31,7 @@ public sealed class GetResumeByIdHandler
         var validationResult = await _validator.ValidateAsync(request, ct);
         BadRequestException.ThrowByValidationResult(validationResult);
 
-        var resume = await _resumeService.GetResumeByIdAsync(request.ResumeId, ct);
+        var resume = await _resumeService.GetResumeByIdAsync(request.ResumeId, request.UserId, ct);
 
         _logger.LogInformation("Resume with id:{ResumeId} were successfully sent to user.", resume.Id);
 
