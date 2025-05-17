@@ -20,6 +20,9 @@
         <Protobuf Include="protos\telegram-adapter.proto" GrpcServices="Client">
             <Generator>MSBuild:Compile</Generator>
         </Protobuf>
+        <Protobuf Include="protos\auth.proto" GrpcServices="Client">
+            <Generator>MSBuild:Compile</Generator>
+        </Protobuf>
     </ItemGroup>
 
     <ItemGroup>

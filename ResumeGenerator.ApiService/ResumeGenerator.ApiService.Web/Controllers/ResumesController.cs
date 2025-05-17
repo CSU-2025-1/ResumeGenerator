@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using ResumeGenerator.ApiService.Application.DTO.Requests.Resumes;
 using ResumeGenerator.ApiService.Application.DTO.Responses.Resumes;
 using ResumeGenerator.ApiService.Application.Handlers.Resumes;
@@ -6,6 +8,7 @@ using ResumeGenerator.ApiService.Web.Attributes;
 
 namespace ResumeGenerator.ApiService.Web.Controllers;
 
+[Authorize]
 [ApiController]
 [Route("/api/v1/[controller]")]
 public sealed class ResumesController : ControllerBase
@@ -13,13 +16,12 @@ public sealed class ResumesController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(GetResumesByUserIdResponse), StatusCodes.Status200OK)]
     public async Task<ActionResult<GetResumesByUserIdResponse>> GetAllResumesByUserId(
-        [FromQuery] Guid userId,
         [FromServices] GetAllResumesByUserIdHandler handler,
         CancellationToken ct = default)
     {
         var result = await handler.Handle(new GetResumesByUserIdRequest
         {
-            UserId = userId
+            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)
         }, ct);
 
         return Ok(result);
@@ -34,7 +36,8 @@ public sealed class ResumesController : ControllerBase
     {
         var result = await handler.Handle(new GetResumeByIdRequest
         {
-            ResumeId = resumeId
+            ResumeId = resumeId,
+            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)
         }, ct);
 
         return Ok(result);
@@ -48,8 +51,12 @@ public sealed class ResumesController : ControllerBase
         [FromServices] CreateResumeHandler handler,
         CancellationToken ct = default)
     {
+        request.Resume = request.Resume with
+        {
+            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)
+        };
         await handler.Handle(request, ct);
-        
+
         return Accepted();
     }
 
@@ -62,9 +69,10 @@ public sealed class ResumesController : ControllerBase
     {
         await handler.Handle(new DeleteResumeByIdRequest
         {
-            ResumeId = resumeId
+            ResumeId = resumeId,
+            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)
         }, ct);
-        
+
         return NoContent();
     }
 }
