@@ -1,15 +1,14 @@
 ﻿using System.Threading.Tasks;
 using Grpc.Core;
 using ResumeGenerator.AuthService.Application.Services;
-using ResumeGenerator.AuthService.Grpc;
 
 namespace ResumeGenerator.AuthService.Grpc;
 
-public sealed class AuthInterceptor : AuthServiceGrpc.AuthServiceGrpcBase
+public sealed class AuthGrpcService : AuthServiceGrpc.AuthServiceGrpcBase
 {
     private readonly IAuthService _authService;
     
-    public AuthInterceptor(IAuthService authService)
+    public AuthGrpcService(IAuthService authService)
     {
         _authService = authService;
     }
