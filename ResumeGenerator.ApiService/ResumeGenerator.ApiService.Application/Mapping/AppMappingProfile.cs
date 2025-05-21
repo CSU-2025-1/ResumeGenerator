@@ -14,6 +14,8 @@ public sealed class AppMappingProfile : MappingProfileBase
             .ForMember(dest => dest.SoftSkills,
                 opt => opt.MapFrom(src => string.Join(", ", src.SoftSkills.Select(s => s.SoftSkillName))));
 
+        CreateMap<Resume, ShortResumeDto>();
+
         CreateMap<ResumeDto, Resume>()
             .ForMember(dest => dest.ResumeStatus, opt => opt.Ignore())
             .ForMember(dest => dest.HardSkills, opt => opt.MapFrom(src => src.HardSkills

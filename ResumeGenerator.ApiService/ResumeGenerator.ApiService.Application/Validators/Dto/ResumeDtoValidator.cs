@@ -9,7 +9,11 @@ public sealed class ResumeDtoValidator: AbstractValidator<ResumeDto>
     {
         RuleFor(dto => dto.Id)
             .Equal(Guid.Empty);
-
+        
+        RuleFor(dto => dto.ResumeName)
+            .NotEmpty()
+            .Length(1, 50);
+        
         RuleFor(dto => dto.UserFirstName)
             .NotEmpty()
             .Length(1, 50);

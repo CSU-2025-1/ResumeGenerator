@@ -2,5 +2,5 @@
 
 public sealed record GetResumesByUserIdResponse
 {
-    public required ResumeDto[] Resumes { get; init; }
+    public required ShortResumeDto[] Resumes { get; init; }
 }
