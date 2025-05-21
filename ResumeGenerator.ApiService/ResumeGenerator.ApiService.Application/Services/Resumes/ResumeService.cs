@@ -49,9 +49,12 @@ public sealed class ResumeService : IResumeService
         await _context.SaveChangesAsync(ct);
     }
 
-    public Task<List<Resume>> GetAllResumesByUserIdAsync(Guid userId, CancellationToken ct = default)
+    public Task<List<Resume>> GetAllResumesByUserIdAsync(Guid userId, int pageNumber, int pageSize,
+        CancellationToken ct = default)
         => _context.Resumes
             .Where(resume => resume.UserId == userId)
+            .Skip((pageNumber - 1) * pageSize)
+            .Take(pageSize)
             .ToListAsync(ct);
 
     public async Task<Resume> GetResumeByIdAsync(Guid resumeId, Guid userId, CancellationToken ct = default)
@@ -61,13 +64,13 @@ public sealed class ResumeService : IResumeService
 
         NotFoundException.ThrowIfNull(resume,
             new Error(StatusCodes.Status404NotFound.ToString(), $"Resume with id: {resumeId} not found in database."));
-        
+
         if (resume.UserId != userId)
         {
             ForbiddenException.ThrowWithError(new Error(StatusCodes.Status403Forbidden.ToString(),
                 $"User with id={userId} can't access this resume."));
         }
-        
+
         return resume;
     }
 
