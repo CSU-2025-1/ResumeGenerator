@@ -6,6 +6,7 @@ public sealed record ResumeDto
 {
     public Guid Id { get; init; }
     public Guid UserId { get; init; }
+    public string ResumeName { get; init; }
     public string UserFirstName { get; init; }
     public string UserLastName { get; init; }
     public string UserPatronymic { get; init; }

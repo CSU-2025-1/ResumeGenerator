@@ -14,6 +14,7 @@ public sealed class ResumeEntityConfiguration : IEntityTypeConfiguration<Resume>
 
         builder.Property(u => u.Id).HasColumnName("id");
         builder.Property(u => u.UserId).HasColumnName("user_id");
+        builder.Property(u => u.ResumeName).HasColumnName("resume_name");
         builder.Property(u => u.UserFirstName).HasColumnName("user_first_name");
         builder.Property(u => u.UserLastName).HasColumnName("user_last_name");
         builder.Property(u => u.UserPatronymic).HasColumnName("user_patronymic");

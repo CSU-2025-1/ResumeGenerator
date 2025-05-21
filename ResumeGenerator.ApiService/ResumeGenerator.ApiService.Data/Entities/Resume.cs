@@ -6,6 +6,7 @@ public sealed class Resume
 {
     public Guid Id { get; set; }
     public Guid UserId { get; set; }
+    public string ResumeName { get; init; }
     public string UserFirstName { get; set; }
     public string UserLastName { get; set; }
     public string UserPatronymic { get; set; }

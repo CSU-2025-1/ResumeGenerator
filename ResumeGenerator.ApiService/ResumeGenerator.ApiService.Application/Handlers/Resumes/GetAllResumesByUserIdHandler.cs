@@ -38,7 +38,7 @@ public sealed class GetAllResumesByUserIdHandler
         return new GetResumesByUserIdResponse
         {
             Resumes = resumes
-                .Select(_mapper.Map<ResumeDto>).ToArray()
+                .Select(_mapper.Map<ShortResumeDto>).ToArray()
         };
     }
 }
