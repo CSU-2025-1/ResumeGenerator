@@ -1,6 +1,5 @@
 using System.Net.Mime;
 using Google.Protobuf.WellKnownTypes;
-using Grpc.Core;
 using HtmlToPdf2AZ.Models;
 using MassTransit;
 using Minio;
@@ -68,7 +67,8 @@ public sealed class CreateResumeCommandConsumer : IConsumer<CreateResumeCommand>
         _telegramClient.SendResumeAsync(new SendResumeRequest
         {
             ResumeID = command.ResumeId.ToString(),
-            UserID = command.UserId.ToString()
+            UserID = command.UserId.ToString(),
+            ResumeTitle = command.ResumeName
         }, cancellationToken: ct).ResponseAsync;
 
     private async Task GenerateResumeToMinioAsync(CreateResumeCommand command, CancellationToken ct = default)

@@ -2,6 +2,7 @@
 using ResumeGenerator.ApiService.Application.Extensions;
 using ResumeGenerator.ApiService.Application.Mapping;
 using ResumeGenerator.ApiService.Application.Services.Auth;
+using ResumeGenerator.ApiService.Application.Services.TelegramAdapter;
 using ResumeGenerator.ApiService.Data.Extentions;
 using ResumeGenerator.ApiService.Grpc;
 using ResumeGenerator.ApiService.Grpc.protos;
@@ -43,15 +44,16 @@ public sealed class Startup
 
         services.AddGrpc();
 
-        services.AddGrpcClient<TelegramAdapter.TelegramAdapterClient>(o =>
-        {
-            o.Address = new Uri(_configuration["TgBot"] ?? string.Empty);
-        });
-
         services.AddSingleton<IAuthService, AuthService>();
         services.AddGrpcClient<AuthServiceGrpc.AuthServiceGrpcClient>(o =>
         {
             o.Address = new Uri(_configuration["AuthService:Url"] ?? string.Empty);
+        });
+
+        services.AddSingleton<ITelegramAdapter, TelegramAdapterService>();
+        services.AddGrpcClient<TelegramAdapter.TelegramAdapterClient>(o =>
+        {
+            o.Address = new Uri(_configuration["TelegramAdapter:Url"] ?? string.Empty);
         });
 
         services.AddHostedService<RetryFailedResumesJob>();

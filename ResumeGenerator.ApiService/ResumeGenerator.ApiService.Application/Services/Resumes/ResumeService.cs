@@ -65,7 +65,7 @@ public sealed class ResumeService : IResumeService
         NotFoundException.ThrowIfNull(resume,
             new Error(StatusCodes.Status404NotFound.ToString(), $"Resume with id: {resumeId} not found in database."));
 
-        if (resume.UserId != userId)
+        if (resume!.UserId != userId)
         {
             ForbiddenException.ThrowWithError(new Error(StatusCodes.Status403Forbidden.ToString(),
                 $"User with id={userId} can't access this resume."));
@@ -82,7 +82,7 @@ public sealed class ResumeService : IResumeService
         NotFoundException.ThrowIfNull(resume,
             new Error(StatusCodes.Status404NotFound.ToString(), $"Resume with id: {resumeId} not found in database."));
 
-        if (resume.UserId != userId)
+        if (resume!.UserId != userId)
         {
             ForbiddenException.ThrowWithError(new Error(StatusCodes.Status403Forbidden.ToString(),
                 $"User with id={userId} can't access this resume."));

@@ -12,7 +12,8 @@ public static class DependencyInjection
         => services.AddScoped<CreateResumeHandler>()
             .AddScoped<GetAllResumesByUserIdHandler>()
             .AddScoped<GetResumeByIdHandler>()
-            .AddScoped<DeleteResumeByIdHandler>();
+            .AddScoped<DeleteResumeByIdHandler>()
+            .AddScoped<ResendResumeByIdHandler>();
 
     public static IServiceCollection AddApplicationServices(this IServiceCollection services)
         => services.AddScoped<IResumeService, ResumeService>();

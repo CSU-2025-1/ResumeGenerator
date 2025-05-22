@@ -43,6 +43,7 @@ public sealed class TelegramAdapterService : Generated.TelegramAdapter.TelegramA
         await _telegramBotClient.SendDocument(
             chatId: chat.Value.ExtId,
             document: InputFile.FromStream(resumeMs.Value),
+            caption: $"Ваше резюме {request.ResumeTitle} готово. Спасибо, что выбрали нас!",
             cancellationToken: context.CancellationToken);
 
         return new Empty();

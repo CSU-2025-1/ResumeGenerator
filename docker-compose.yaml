@@ -50,7 +50,7 @@ services:
       ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection__Api}
       Redis__Configuration: ${Redis__Configuration}
       Redis__InstanceName: ${Redis__InstanceName}
-      TgBot: "http://telegram-adapter:8081"
+      TelegramAdapter__Url: "http://telegram-adapter:8081"
       AuthService__Url: "http://auth-service:8081"
     depends_on:
       api-db:

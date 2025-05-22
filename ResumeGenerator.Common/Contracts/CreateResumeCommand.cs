@@ -16,4 +16,5 @@ public sealed record CreateResumeCommand
     public required int ExperienceYears { get; init; }
     public required string[] HardSkills { get; init; }
     public required string[] SoftSkills { get; init; }
+    public required string ResumeName { get; init; }
 }

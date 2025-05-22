@@ -79,4 +79,19 @@ public sealed class ResumesController : ControllerBase
 
         return NoContent();
     }
+
+    [HttpPost("{resumeId:guid}/resend")]
+    [Idempotent]
+    [ProducesResponseType(StatusCodes.Status202Accepted)]
+    public async Task<IActionResult> ResendResumeById(
+        [FromRoute] Guid resumeId,
+        [FromServices] ResendResumeByIdHandler handler,
+        CancellationToken ct = default)
+    {
+        await handler.HandleAsync(new ResendResumeByIdRequest(
+            ResumeId: resumeId,
+            CurrentUserId: Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)), ct);
+
+        return Accepted();
+    }
 }
