@@ -31,7 +31,8 @@ public sealed class GetAllResumesByUserIdHandler
         var validationResult = await _validator.ValidateAsync(request, ct);
         BadRequestException.ThrowByValidationResult(validationResult);
 
-        var resumes = await _resumeService.GetAllResumesByUserIdAsync(request.UserId, ct);
+        var resumes = await _resumeService.GetAllResumesByUserIdAsync(request.UserId,
+            request.PageNumber, request.PageSize, ct);
 
         _logger.LogInformation("Resumes of user with id {UserId} were successfully sent to him.", request.UserId);
 

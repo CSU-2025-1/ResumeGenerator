@@ -9,7 +9,8 @@ public interface IResumeService
 
     Task UpdateResumeStatusAsync(Guid resumeId, ResumeStatus newStatus, CancellationToken ct = default);
 
-    Task<List<Resume>> GetAllResumesByUserIdAsync(Guid userId, CancellationToken ct = default);
+    Task<List<Resume>> GetAllResumesByUserIdAsync(Guid userId, int pageNumber, int pageSize,
+        CancellationToken ct = default);
 
     Task<Resume> GetResumeByIdAsync(Guid resumeId, Guid userId, CancellationToken ct = default);
 

@@ -17,11 +17,15 @@ public sealed class ResumesController : ControllerBase
     [ProducesResponseType(typeof(GetResumesByUserIdResponse), StatusCodes.Status200OK)]
     public async Task<ActionResult<GetResumesByUserIdResponse>> GetAllResumesByUserId(
         [FromServices] GetAllResumesByUserIdHandler handler,
+        [FromQuery] int pageNumber = 1,
+        [FromQuery] int pageSize = 10,
         CancellationToken ct = default)
     {
         var result = await handler.Handle(new GetResumesByUserIdRequest
         {
-            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value)
+            UserId = Guid.Parse(User.Claims.First(x => x.Type is ClaimTypes.NameIdentifier).Value),
+            PageNumber = pageNumber,
+            PageSize = pageSize,
         }, ct);
 
         return Ok(result);
