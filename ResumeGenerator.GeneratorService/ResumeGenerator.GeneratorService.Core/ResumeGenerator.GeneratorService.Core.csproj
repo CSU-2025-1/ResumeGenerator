@@ -7,8 +7,4 @@
     <UserSecretsId>dotnet-ResumeGenerator.GeneratorService.Worker-a00cb225-3434-48a8-a7c3-f349ed4aaa9f</UserSecretsId>
   </PropertyGroup>
   
-  <ItemGroup>
-    <PackageReference Include="HtmlToPdf2AZ" Version="1.0.1" />
-  </ItemGroup>
-  
 </Project>

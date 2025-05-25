@@ -32,7 +32,10 @@ public sealed class ResumeService : IResumeService
         _context.Resumes.Add(newResume);
         await _context.SaveChangesAsync(ct);
 
-        await _bus.Publish(_mapper.Map<CreateResumeCommand>(newResume), ct);
+        await _bus.Publish(_mapper.Map<CreateResumeCommand>(newResume), x =>
+        {
+            x.MessageId = newResume.Id;
+        }, ct);
 
         return newResume;
     }

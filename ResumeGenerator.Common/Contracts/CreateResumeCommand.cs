@@ -4,9 +4,9 @@ public sealed record CreateResumeCommand
 {
     public required Guid ResumeId { get; init; }
     public required Guid UserId { get; init; }
-    public required string FirstName { get; init; }
-    public required string LastName { get; init; }
-    public required string MiddleName { get; init; }
+    public required string UserFirstName { get; init; }
+    public required string UserLastName { get; init; }
+    public required string UserPatronymic { get; init; }
     public required string DesiredPosition { get; init; }
     public required string GitHubLink { get; init; }
     public required string TelegramLink { get; init; }

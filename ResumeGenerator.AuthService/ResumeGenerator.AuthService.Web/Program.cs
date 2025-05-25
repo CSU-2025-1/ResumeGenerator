@@ -36,7 +36,7 @@ builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IPasswordHasher, BCryptPasswordHasher>();
 builder.Services.AddScoped<ITokenGenerator, JwtTokenGenerator>();
 builder.Services.AddScoped<IBotLinkGenerator, TelegramBotLinkGenerator>();
-builder.Services.AddScoped<ResumeGenerator.AuthService.Grpc.AuthGrpcService>();
+builder.Services.AddScoped<AuthGrpcService>();
 
 builder.Services.AddGrpc(options =>
 {

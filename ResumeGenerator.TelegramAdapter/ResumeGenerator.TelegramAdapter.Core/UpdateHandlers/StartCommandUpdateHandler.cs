@@ -4,6 +4,7 @@ using ResumeGenerator.TelegramAdapter.Core.Abstractions;
 using ResumeGenerator.TelegramAdapter.Core.Entities;
 using ResumeGenerator.TelegramAdapter.Core.Exceptions;
 using ResumeGenerator.TelegramAdapter.Grpc.Clients.Generated;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -13,15 +14,18 @@ public sealed class StartCommandUpdateHandler : IUpdateHandler
 {
     private readonly ITelegramChatRepository _telegramChatRepository;
     private readonly AuthServiceGrpc.AuthServiceGrpcClient _authServiceGrpcClient;
+    private readonly ITelegramBotClient _telegramBotClient;
     private readonly ILogger<StartCommandUpdateHandler> _logger;
 
     public StartCommandUpdateHandler(
         ITelegramChatRepository telegramChatRepository,
         AuthServiceGrpc.AuthServiceGrpcClient authServiceGrpcClient,
+        ITelegramBotClient telegramBotClient,
         ILogger<StartCommandUpdateHandler> logger)
     {
         _telegramChatRepository = telegramChatRepository;
         _authServiceGrpcClient = authServiceGrpcClient;
+        _telegramBotClient = telegramBotClient;
         _logger = logger;
     }
 
@@ -53,6 +57,11 @@ public sealed class StartCommandUpdateHandler : IUpdateHandler
             ExtId = update.Message.Chat.Id,
             UserId = activationCode
         }, ct);
+
+        await _telegramBotClient.SendMessage(
+            chatId: update.Message.Chat.Id,
+            text: "Поздравляем с успешной активацией аккаунта! Теперь вы можете продолжить работу на сайте",
+            cancellationToken: ct);
     }
 
     private async Task ActivateUserAsync(string activationCode, CancellationToken ct = default)

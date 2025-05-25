@@ -1,5 +1,7 @@
 using MassTransit;
 using Minio;
+using QuestPDF.Drawing;
+using QuestPDF.Infrastructure;
 using ResumeGenerator.GeneratorService.Core.Entities;
 using ResumeGenerator.GeneratorService.Core.Interfaces;
 using ResumeGenerator.GeneratorService.Grpc.Generated;
@@ -10,6 +12,9 @@ public static class Program
 {
     public static void Main(string[] args)
     {
+        QuestPDF.Settings.License = LicenseType.Community;
+        FontManager.RegisterFont(File.OpenRead(Environment.GetEnvironmentVariable("ARIAL_PATH")!));
+
         HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
 
         builder.Services.Configure<ResumeTemplates>(
@@ -29,17 +34,11 @@ public static class Program
             {
                 cfg.Host(builder.Configuration["RabbitMq:Host"], builder.Configuration["RabbitMq:VirtualHost"], h =>
                 {
-                    h.Username(builder.Configuration["RabbitMq:Username"]);
-                    h.Password(builder.Configuration["RabbitMq:Password"]);
+                    h.Username(builder.Configuration["RabbitMq:Username"]!);
+                    h.Password(builder.Configuration["RabbitMq:Password"]!);
                 });
 
                 cfg.ConfigureEndpoints(context);
-                cfg.ReceiveEndpoint("created-resumes", y =>
-                {
-                    y.ConfigureConsumeTopology = true;
-
-                    y.Consumer<CreateResumeCommandConsumer>(context);
-                });
             });
         });
 

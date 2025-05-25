@@ -1,15 +1,13 @@
-﻿using HtmlToPdf2AZ;
-using HtmlToPdf2AZ.Models;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
+using QuestPDF.Fluent;
 using ResumeGenerator.GeneratorService.Core.Entities;
 using ResumeGenerator.GeneratorService.Core.Interfaces;
+using ResumeGenerator.GeneratorService.Infrastructure.Templates;
 
 namespace ResumeGenerator.GeneratorService.Infrastructure.Generating;
 
 public sealed class ResumeGenerator : IResumeGenerator
 {
-    private static readonly PdfTools PdfTools = new();
-
     private readonly string _template;
     private readonly string _style;
 
@@ -20,12 +18,15 @@ public sealed class ResumeGenerator : IResumeGenerator
         _style = LoadFile(folder, options.Value.PdfStyleName, "CSS style");
     }
 
-    public Task<Stream> GeneratePdfAsync(
-        in Resume resume, MarginOptions marginOptions, PaperFormat paperFormat, CancellationToken ct = default) =>
-            PdfTools.GetPDFFromHTML(
-                htmlContent: GenerateHtml(resume),
-                marginOptions: marginOptions,
-                paperFormat: paperFormat);
+    public Stream GeneratePdf(in Resume resume)
+    {
+        var ms = new MemoryStream();
+
+        var document = new ResumeDocument(resume);
+        document.GeneratePdf(ms);
+
+        return ms;
+    }
 
     public string GenerateHtml(in Resume resume) => string.Format(_template, _style,
         resume.FirstName, resume.MiddleName, resume.LastName,

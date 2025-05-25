@@ -15,7 +15,9 @@ services:
       retries: 3
 
   rabbitmq:
-    image: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+      - "15672:15672"
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 10s
@@ -42,7 +44,7 @@ services:
       dockerfile: ./ResumeGenerator.ApiService/ResumeGenerator.ApiService.Web/Dockerfile
     restart: on-failure
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       RabbitMq__Host: ${RabbitMq__Host}
       RabbitMq__VirtualHost: ${RabbitMq__VirtualHost}
       RabbitMq__Username: ${RabbitMq__Username}
@@ -68,6 +70,8 @@ services:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY}
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
     command: "server --address 0.0.0.0:9000 --console-address 0.0.0.0:9001 /data"
+    ports:
+      - "9001:9001"
     volumes:
       - minio_data:/data
 
@@ -89,6 +93,9 @@ services:
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY}
       TELEGRAM_GRPC_ENDPOINT: "http://telegram-adapter:8081"
       API_GRPC_ENDPOINT: "http://api-service:8081"
+      ARIAL_PATH: ${ARIAL_PATH}
+    volumes:
+      - /home/sug4chy/.local/share/fonts/arialmt.ttf:${ARIAL_PATH}
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -119,7 +126,7 @@ services:
       dockerfile: ResumeGenerator.AuthService.Web/Dockerfile
     restart: on-failure
     environment:
-      ASPNETCORE_ENVIRONMENT: Production
+      ASPNETCORE_ENVIRONMENT: Development
       ConnectionStrings__DefaultConnection: ${ConnectionStrings__DefaultConnection__Auth}
       Jwt__Key: ${Jwt__Key}
       Jwt__Issuer: ${Jwt__Issuer}
