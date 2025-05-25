@@ -10,11 +10,11 @@ internal static class Program
                 webBuilder.UseStartup<Startup>()
                     .UseKestrel(options =>
                     {
-                        options.ListenLocalhost(8080, listenOptions =>
+                        options.ListenAnyIP(8080, listenOptions =>
                         {
                             listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
                         });
-                        options.ListenLocalhost(8081, listenOptions =>
+                        options.ListenAnyIP(8081, listenOptions =>
                         {
                             listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
                         });

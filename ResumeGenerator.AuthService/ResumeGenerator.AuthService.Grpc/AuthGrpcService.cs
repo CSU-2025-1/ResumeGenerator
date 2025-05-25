@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Grpc.Core;
 using ResumeGenerator.AuthService.Application.Services;
 
@@ -17,7 +18,7 @@ public sealed class AuthGrpcService : AuthServiceGrpc.AuthServiceGrpcBase
     ActivateUserRequest request,
     ServerCallContext context)
     {
-        await _authService.ActivateUserAsync(request.ActivationCode, context.CancellationToken);
+        await _authService.ActivateUserAsync(Guid.Parse(request.ActivationCode), context.CancellationToken);
         return new ActivateUserResponse
         {
             Message = "Аккаунт успешно активирован"

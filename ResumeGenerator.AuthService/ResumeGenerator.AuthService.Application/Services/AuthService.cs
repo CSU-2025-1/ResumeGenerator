@@ -78,9 +78,9 @@ public sealed class AuthService : IAuthService
         return new LoginUserResponse(token);
     }
 
-    public async Task ActivateUserAsync(string activationCode, CancellationToken ct = default)
+    public async Task ActivateUserAsync(Guid activationCode, CancellationToken ct = default)
     {
-        var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == activationCode, ct);
+        var user = await _context.Users.FirstOrDefaultAsync(u => u.Id == activationCode, ct);
 
         if (user == null)
         {

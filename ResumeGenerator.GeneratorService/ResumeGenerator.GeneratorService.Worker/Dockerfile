@@ -4,14 +4,14 @@ WORKDIR /app
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ResumeGenerator.GeneratorService.Worker/ResumeGenerator.GeneratorService.Worker.csproj", "ResumeGenerator.GeneratorService.Worker/"]
-COPY ["../ResumeGenerator.Common/ResumeGenerator.Common.csproj", "../ResumeGenerator.Common/"]
-COPY ["ResumeGenerator.GeneratorService.Core/ResumeGenerator.GeneratorService.Core.csproj", "ResumeGenerator.GeneratorService.Core/"]
-COPY ["ResumeGenerator.GeneratorService.Grpc/ResumeGenerator.GeneratorService.Grpc.csproj", "ResumeGenerator.GeneratorService.Grpc/"]
-COPY ["ResumeGenerator.GeneratorService.Infrastructure/ResumeGenerator.GeneratorService.Infrastructure.csproj", "ResumeGenerator.GeneratorService.Infrastructure/"]
-RUN dotnet restore "ResumeGenerator.GeneratorService.Worker/ResumeGenerator.GeneratorService.Worker.csproj"
+COPY ["ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Worker/ResumeGenerator.GeneratorService.Worker.csproj", "ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Worker/"]
+COPY ["ResumeGenerator.Common/ResumeGenerator.Common.csproj", "ResumeGenerator.Common/"]
+COPY ["ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Core/ResumeGenerator.GeneratorService.Core.csproj", "ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Core/"]
+COPY ["ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Grpc/ResumeGenerator.GeneratorService.Grpc.csproj", "ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Grpc/"]
+COPY ["ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Infrastructure/ResumeGenerator.GeneratorService.Infrastructure.csproj", "ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Infrastructure/"]
+RUN dotnet restore "ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Worker/ResumeGenerator.GeneratorService.Worker.csproj"
 COPY . .
-WORKDIR "/src/ResumeGenerator.GeneratorService.Worker"
+WORKDIR "/src/ResumeGenerator.GeneratorService/ResumeGenerator.GeneratorService.Worker"
 RUN dotnet build "./ResumeGenerator.GeneratorService.Worker.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

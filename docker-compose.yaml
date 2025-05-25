@@ -115,8 +115,8 @@ services:
 
   auth-service:
     build:
-      context: .
-      dockerfile: ./ResumeGenerator.AuthService/ResumeGenerator.AuthService.Web/Dockerfile
+      context: ./ResumeGenerator.AuthService
+      dockerfile: ResumeGenerator.AuthService.Web/Dockerfile
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
@@ -124,7 +124,6 @@ services:
       Jwt__Key: ${Jwt__Key}
       Jwt__Issuer: ${Jwt__Issuer}
       Jwt__Audience: ${Jwt__Audience}
-      Jwt__TokenLifetime: ${Jwt__TokenLifetime}
       TelegramBot__Username: ${TelegramBot__Username}
     depends_on:
       auth-db:
@@ -146,8 +145,8 @@ services:
 
   telegram-adapter:
     build:
-      context: .
-      dockerfile: ./ResumeGenerator.TelegramAdapter/ResumeGenerator.TelegramAdapter.Api/Dockerfile
+      context: ./ResumeGenerator.TelegramAdapter
+      dockerfile: ResumeGenerator.TelegramAdapter.Api/Dockerfile
     restart: on-failure
     environment:
       ASPNETCORE_ENVIRONMENT: Production
@@ -158,6 +157,8 @@ services:
       Minio__AccessKey: ${MINIO_ACCESS_KEY}
       Minio__SecretKey: ${MINIO_SECRET_KEY}
       AuthService__Url: "http://auth-service:8081"
+    ports:
+      - "8443:8080"
     depends_on:
       telegram-adapter-db:
         condition: service_healthy
@@ -168,9 +169,14 @@ services:
     image: nginx
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf
-      - ./certificates:~/certificates
+#      - ./certificates:~/certificates
     ports:
-      - "8443:443"
+      - "8080:80"
+    depends_on:
+      api-service:
+        condition: service_started
+      auth-service:
+        condition: service_started
 
 volumes:
   api_postgres_data:

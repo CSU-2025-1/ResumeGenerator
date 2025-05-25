@@ -6,15 +6,15 @@ EXPOSE 8081
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 ARG BUILD_CONFIGURATION=Release
 WORKDIR /src
-COPY ["ResumeGenerator.ApiService.Web/ResumeGenerator.ApiService.Web.csproj", "ResumeGenerator.ApiService.Web/"]
-COPY ["ResumeGenerator.ApiService.Application/ResumeGenerator.ApiService.Application.csproj", "ResumeGenerator.ApiService.Application/"]
-COPY ["../ResumeGenerator.Common/ResumeGenerator.Common.csproj", "../ResumeGenerator.Common/"]
-COPY ["ResumeGenerator.ApiService.Data/ResumeGenerator.ApiService.Data.csproj", "ResumeGenerator.ApiService.Data/"]
-COPY ["ResumeGenerator.ApiService.Grpc/ResumeGenerator.ApiService.Grpc.csproj", "ResumeGenerator.ApiService.Grpc/"]
-COPY ["ResumeGenerator.ApiService.Jobs/ResumeGenerator.ApiService.Jobs.csproj", "ResumeGenerator.ApiService.Jobs/"]
-RUN dotnet restore "ResumeGenerator.ApiService.Web/ResumeGenerator.ApiService.Web.csproj"
+COPY ["ResumeGenerator.ApiService/ResumeGenerator.ApiService.Web/ResumeGenerator.ApiService.Web.csproj", "ResumeGenerator.ApiService/ResumeGenerator.ApiService.Web/"]
+COPY ["ResumeGenerator.ApiService/ResumeGenerator.ApiService.Application/ResumeGenerator.ApiService.Application.csproj", "ResumeGenerator.ApiService/ResumeGenerator.ApiService.Application/"]
+COPY ["ResumeGenerator.Common/ResumeGenerator.Common.csproj", "ResumeGenerator.Common/"]
+COPY ["ResumeGenerator.ApiService/ResumeGenerator.ApiService.Data/ResumeGenerator.ApiService.Data.csproj", "ResumeGenerator.ApiService/ResumeGenerator.ApiService.Data/"]
+COPY ["ResumeGenerator.ApiService/ResumeGenerator.ApiService.Grpc/ResumeGenerator.ApiService.Grpc.csproj", "ResumeGenerator.ApiService/ResumeGenerator.ApiService.Grpc/"]
+COPY ["ResumeGenerator.ApiService/ResumeGenerator.ApiService.Jobs/ResumeGenerator.ApiService.Jobs.csproj", "ResumeGenerator.ApiService/ResumeGenerator.ApiService.Jobs/"]
+RUN dotnet restore "ResumeGenerator.ApiService/ResumeGenerator.ApiService.Web/ResumeGenerator.ApiService.Web.csproj"
 COPY . .
-WORKDIR "/src/ResumeGenerator.ApiService.Web"
+WORKDIR "/src/ResumeGenerator.ApiService/ResumeGenerator.ApiService.Web"
 RUN dotnet build "./ResumeGenerator.ApiService.Web.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
 FROM build AS publish

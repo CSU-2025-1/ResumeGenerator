@@ -11,11 +11,11 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.UseKestrel(options =>
 {
-    options.ListenLocalhost(8080, listenOptions =>
+    options.ListenAnyIP(8080, listenOptions =>
     {
         listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http1;
     });
-    options.ListenLocalhost(8081, listenOptions =>
+    options.ListenAnyIP(8081, listenOptions =>
     {
         listenOptions.Protocols = Microsoft.AspNetCore.Server.Kestrel.Core.HttpProtocols.Http2;
     });
@@ -25,7 +25,7 @@ builder.Services.Configure<JwtOptions>(builder.Configuration.GetSection(JwtOptio
 builder.Services.Configure<TelegramBotOptions>(builder.Configuration.GetSection(TelegramBotOptions.SectionName));
 
 builder.Services.AddControllers();
-builder.Services.AddValidatorsFromAssembly(typeof(IAuthService).Assembly); //регистрирует все валидаторы из application
+builder.Services.AddValidatorsFromAssembly(typeof(IAuthService).Assembly); //пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ application
 builder.Services.AddFluentValidationAutoValidation();
 builder.Services.AddFluentValidationClientsideAdapters();
 

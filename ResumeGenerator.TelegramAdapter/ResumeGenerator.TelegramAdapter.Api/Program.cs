@@ -1,6 +1,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Server.Kestrel.Core;
 using ResumeGenerator.TelegramAdapter.Core;
+using ResumeGenerator.TelegramAdapter.Core.Abstractions;
+using ResumeGenerator.TelegramAdapter.Core.UpdateHandlers;
 using ResumeGenerator.TelegramAdapter.Core.Extensions;
 using ResumeGenerator.TelegramAdapter.Grpc.Clients.Generated;
 using ResumeGenerator.TelegramAdapter.Grpc.Server.Services;
@@ -16,13 +18,15 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.WebHost.ConfigureKestrel(options =>
 {
-    options.ListenLocalhost(8080, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
+    options.ListenAnyIP(8080, listenOptions => { listenOptions.Protocols = HttpProtocols.Http1; });
 
-    options.ListenLocalhost(8081, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
+    options.ListenAnyIP(8081, listenOptions => { listenOptions.Protocols = HttpProtocols.Http2; });
 });
 
 builder.Services.AddGrpc();
 builder.Services.ConfigureTelegramBot<JsonOptions>(opt => opt.SerializerOptions);
+builder.Services.AddScoped<UpdateDispatcher>();
+builder.Services.AddScoped<IUpdateHandler, StartCommandUpdateHandler>();
 
 var telegramBotClient = new TelegramBotClient(builder.Configuration["Telegram:BotToken"] ?? string.Empty);
 await telegramBotClient.SetWebhook(
@@ -37,15 +41,22 @@ builder.Services.AddPersistence(conString);
 builder.Services.AddMinio(builder.Configuration.GetSection("Minio"));
 
 builder.Services.AddGrpc();
-builder.Services.AddGrpcClient<AuthServiceGrpc.AuthServiceGrpcClient>();
+builder.Services.AddGrpcClient<AuthServiceGrpc.AuthServiceGrpcClient>(
+    o => o.Address = new Uri(builder.Configuration["AuthService:Url"])
+);
 
 var app = builder.Build();
 
 app.MapGrpcService<TelegramAdapterService>();
-app.MapPost("/telegram-adapter/v1/updates", (
+app.MapPost("/telegram-adapter/v1/updates", async (
     [FromBody] Update update,
     [FromServices] UpdateDispatcher updateDispatcher,
-    CancellationToken ct) => updateDispatcher.DispatchAsync(update, ct));
+    CancellationToken ct) =>
+{
+    await updateDispatcher.DispatchAsync(update, ct);
+    Console.WriteLine("Done");
+    return Results.Ok();
+});
 
 var migrator = new Migrator(conString);
 migrator.Migrate();
