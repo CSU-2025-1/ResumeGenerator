@@ -1,0 +1,32 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <UserSecretsId>dotnet-ResumeGenerator.GeneratorService.Worker-a00cb225-3434-48a8-a7c3-f349ed4aaa9f</UserSecretsId>
+        <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="MassTransit" Version="8.4.0"/>
+        <PackageReference Include="MassTransit.RabbitMQ" Version="8.4.0"/>
+        <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.1"/>
+        <PackageReference Include="Minio" Version="6.0.4"/>
+        <PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="2.88.9"/>
+        <PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.1"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\..\ResumeGenerator.Common\ResumeGenerator.Common.csproj"/>
+        <ProjectReference Include="..\ResumeGenerator.GeneratorService.Core\ResumeGenerator.GeneratorService.Core.csproj"/>
+        <ProjectReference Include="..\ResumeGenerator.GeneratorService.Grpc\ResumeGenerator.GeneratorService.Grpc.csproj"/>
+        <ProjectReference Include="..\ResumeGenerator.GeneratorService.Infrastructure\ResumeGenerator.GeneratorService.Infrastructure.csproj"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <Content Include="..\.dockerignore">
+            <Link>.dockerignore</Link>
+        </Content>
+    </ItemGroup>
+</Project>

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <TargetFramework>net9.0</TargetFramework>
+        <ImplicitUsings>enable</ImplicitUsings>
+        <Nullable>enable</Nullable>
+        <RootNamespace>ResumeGenerator.TelegramAdapter.Core</RootNamespace>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="CSharpFunctionalExtensions" Version="3.6.0"/>
+        <PackageReference Include="Telegram.Bot" Version="22.5.1"/>
+        <PackageReference Include="Microsoft.Extensions.Logging" Version="9.0.4"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\ResumeGenerator.TelegramAdapter.Grpc.Clients\ResumeGenerator.TelegramAdapter.Grpc.Clients.csproj" />
+    </ItemGroup>
+
+</Project>
