@@ -488,4 +488,6 @@ $RECYCLE.BIN/
 
 # HtmlToPdf2AZ files
 *.local-chromium
+
 *.conf
+/certificates
